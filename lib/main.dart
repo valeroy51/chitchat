@@ -1,3 +1,4 @@
+import 'package:chitchat/screen/homescreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,12 +10,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      title: 'ChitChat',
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        elevation: 1,
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.normal, fontSize: 20),
+        backgroundColor: Colors.black,
+      )),
+      home: const homeScreen(),
     );
   }
 }
