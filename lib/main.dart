@@ -1,5 +1,7 @@
-import 'package:chitchat/screen/homescreen.dart';
+import 'package:chitchat/screen/login/loginscreen.dart';
 import 'package:flutter/material.dart';
+
+late Size mq;
 
 void main() {
   runApp(const MainApp());
@@ -19,9 +21,9 @@ class MainApp extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(
             color: Colors.white, fontWeight: FontWeight.normal, fontSize: 20),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.indigo,
       )),
-      home: const homeScreen(),
+      home: const loginScreen(),
     );
   }
 }
