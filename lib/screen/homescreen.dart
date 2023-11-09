@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class homeScreen extends StatefulWidget {
@@ -12,7 +13,7 @@ class _homeScreenState extends State<homeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.home),
+        leading: const Icon(CupertinoIcons.home),
         title: const Text('ChitChat'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
