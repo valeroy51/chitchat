@@ -1,9 +1,13 @@
 import 'package:chitchat/screen/login/loginscreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'firebase_options.dart';
 
 late Size mq;
 
 void main() {
+  _initializeFirebase();
   runApp(const MainApp());
 }
 
@@ -26,4 +30,10 @@ class MainApp extends StatelessWidget {
       home: const loginScreen(),
     );
   }
+}
+
+_initializeFirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }

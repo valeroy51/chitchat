@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "835382712410",
+    "project_id": "chitchat-untar",
+    "storage_bucket": "chitchat-untar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835382712410:android:7a01587648e72a937e2063",
+        "android_client_info": {
+          "package_name": "com.example.chitchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUB-MH9gnidhZyBC9xuReLl5EFPfzK9fQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
