@@ -8,9 +8,11 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.6
+  firebase_auth: ^4.13.0
   firebase_core: ^2.21.0
   flutter:
     sdk: flutter
+  google_sign_in: ^6.1.6
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
@@ -21,7 +23,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "icon"
   ios: true
-  image_path: "img/front.png"
+  image_path: "img/Logo dark.png"
   min_sdk_android: 21
 
 flutter:
@@ -32,4 +34,6 @@ flutter:
     - img/google.png
     - img/front.png
     - img/logo11.png
+    - img/logo12.png
     - img/other.png
+    - img/Logo dark.png

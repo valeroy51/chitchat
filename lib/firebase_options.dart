@@ -67,6 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '835382712410',
     projectId: 'chitchat-untar',
     storageBucket: 'chitchat-untar.appspot.com',
+    androidClientId: '835382712410-5gs7k9fifo26fbid80oo8dmh1ngh3g60.apps.googleusercontent.com',
+    iosClientId: '835382712410-s2ft8g16i7l42juvorcmr25kktd82ujs.apps.googleusercontent.com',
     iosBundleId: 'com.example.chitchat',
   );
 
@@ -76,6 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '835382712410',
     projectId: 'chitchat-untar',
     storageBucket: 'chitchat-untar.appspot.com',
+    androidClientId: '835382712410-5gs7k9fifo26fbid80oo8dmh1ngh3g60.apps.googleusercontent.com',
+    iosClientId: '835382712410-lltoh7dqdrj7c5g9377pqppk2g4q4u3n.apps.googleusercontent.com',
     iosBundleId: 'com.example.chitchat.RunnerTests',
   );
 }

@@ -1,5 +1,12 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:chitchat/api/api.dart';
+import 'package:chitchat/helper/dialog.dart';
 import 'package:chitchat/screen/homescreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../main.dart';
 
@@ -23,9 +30,48 @@ class _loginScreenState extends State<loginScreen> {
     });
   }
 
+  Future<UserCredential?> _signInWithGoogle() async {
+    try {
+      await InternetAddress.lookup('google.com');
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      return await apis.auth.signInWithCredential(credential);
+    } catch (e) {
+      log('\nsignInWithGoogle: $e');
+      dialog.showSnackBar(
+          context, 'Terjadi kesalahan, tolong periksa internet anda!');
+      return null;
+    }
+  }
+
+  // _signOut() async {
+  //await FirebaseAuth.instance.signOut();
+  //await GoogleSignIn().signOut();
+  //}
+
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size;
+    _googleButton() {
+      dialog.showProgressBar(context);
+      _signInWithGoogle().then((user) {
+        Navigator.pop(context);
+        if (user != null) {
+          log('User: ${user.user}');
+          log('UserAdditionalInfo: ${user.additionalUserInfo}');
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const homeScreen()));
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -35,13 +81,10 @@ class _loginScreenState extends State<loginScreen> {
       body: Stack(children: [
         AnimatedPositioned(
             top: mq.height * .15,
-            // top: _isAnimated ? mq.height * .15 : -mq.height,
             width: mq.width,
             left: _isAnimated ? mq.width * .005 : -mq.width,
-            // right: _isAnimated ? mq.width * .005 : -mq.width,
-            // right: mq.width * .005,
             duration: const Duration(seconds: 1),
-            child: Image.asset('img/logo.png')),
+            child: Image.asset('img/logo12.png')),
         Positioned(
             bottom: mq.height * .15,
             left: mq.width * .05,
@@ -53,8 +96,7 @@ class _loginScreenState extends State<loginScreen> {
                     shape: const StadiumBorder(),
                     elevation: 1),
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const homeScreen()));
+                  _googleButton();
                 },
                 icon: Image.asset(
                   'img/google.png',
