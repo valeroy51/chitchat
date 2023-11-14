@@ -1,4 +1,5 @@
 import 'package:chitchat/screen/homescreen.dart';
+import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -54,7 +55,7 @@ class _loginScreenState extends State<loginScreen> {
                     elevation: 1),
                 onPressed: () {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const homeScreen()));
+                      MaterialPageRoute(builder: (_) => const StatusPage()));
                 },
                 icon: Image.asset(
                   'img/google.png',
