@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
@@ -35,13 +37,28 @@ class _homeScreenState extends State<homeScreen> {
           child: const Icon(Icons.add_comment_rounded),
         ),
       ),
-      body: ListView.builder(
-          itemCount: 10,
-          // padding: EdgeInsets.only(top: mq.height * .005),
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            return const chatUserCard();
-          }),
+      body: StreamBuilder(
+        stream: apis.firestore.collection('Users').snapshots(),
+        builder: (context, snapshot) {
+          final list = [];
+
+          if (snapshot.hasData) {
+            final data = snapshot.data?.docs;
+            for (var i in data!) {
+              log('Data: ${i.data()}');
+              list.add(i.data()['Name']);
+            }
+          }
+          return ListView.builder(
+              itemCount: list.length,
+              // padding: EdgeInsets.only(top: mq.height * .005),
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                // return const chatUserCard();
+                return Text('Name : ${list[index]}');
+              });
+        },
+      ),
     );
   }
 }
