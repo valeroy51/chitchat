@@ -80,11 +80,18 @@ class _loginScreenState extends State<loginScreen> {
       ),
       body: Stack(children: [
         AnimatedPositioned(
-            top: mq.height * .15,
-            width: mq.width,
-            left: _isAnimated ? mq.width * .005 : -mq.width,
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeInOut,
+          top: _isAnimated ? mq.height * 0.23 : mq.height * 0.5,
+          left: _isAnimated ? mq.width * 0.1 : mq.width * 0.5,
+          child: AnimatedContainer(
             duration: const Duration(seconds: 1),
-            child: Image.asset('img/logo12.png')),
+            curve: Curves.easeInOut,
+            width: _isAnimated ? mq.width * 0.8 : 0,
+            height: _isAnimated ? mq.height * 0.3 : 0,
+            child: Image.asset('img/logo12.png'),
+          ),
+        ),
         Positioned(
             bottom: mq.height * .15,
             left: mq.width * .05,
