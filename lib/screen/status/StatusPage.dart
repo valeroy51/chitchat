@@ -1,6 +1,7 @@
 import 'package:chitchat/StatusPageUI/HeadOwnStatus.dart';
 import 'package:chitchat/StatusPageUI/OtherStatus.dart';
 import 'package:flutter/material.dart';
+import 'package:chitchat/screen/status/StoryView.dart';
 
 class StatusPage extends StatefulWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -53,6 +54,12 @@ class _StatusPageState extends State<StatusPage> {
             // SizedBox(
             //   height: 10,
             // ),
+            // GestureDetector(
+            //   onTap: () => Navigator.push(context,
+            //   MaterialPageRoute(builder: (context)
+            //   =>StoryPageView())),
+            // )
+
             HeadOwnStatus(),
             label("Recent updates"),
             OtherStatus(
