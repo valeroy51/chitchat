@@ -64,7 +64,7 @@ class _homeScreenState extends State<homeScreen> {
                   // return Text('Name : ${list[index]}');
                 });
               }else{
-                return const Center(child: Text('No Connection Found!', 
+                return const Center(child: Text('Terjadi kesalahan, tolong periksa internet anda!', 
                   style: TextStyle(fontSize: 20),));
               }
           }
