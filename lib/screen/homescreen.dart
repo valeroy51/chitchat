@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chitchat/api/api.dart';
@@ -45,7 +46,7 @@ class _homeScreenState extends State<homeScreen> {
           if (snapshot.hasData) {
             final data = snapshot.data?.docs;
             for (var i in data!) {
-              log('Data: ${i.data()}');
+              log('Data: ${jsonEncode(i.data())}');
               list.add(i.data()['Name']);
             }
           }
