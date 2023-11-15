@@ -1,7 +1,7 @@
 import 'package:chitchat/StatusPageUI/HeadOwnStatus.dart';
 import 'package:chitchat/StatusPageUI/OtherStatus.dart';
-import 'package:flutter/material.dart';
 import 'package:chitchat/screen/status/StoryView.dart';
+import 'package:flutter/material.dart';
 
 class StatusPage extends StatefulWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -51,62 +51,101 @@ class _StatusPageState extends State<StatusPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // SizedBox(
-            //   height: 10,
-            // ),
-            // GestureDetector(
-            //   onTap: () => Navigator.push(context,
-            //   MaterialPageRoute(builder: (context)
-            //   =>StoryPageView())),
-            // )
-
             HeadOwnStatus(),
             label("Recent updates"),
-            OtherStatus(
-              name: "Margot",
-              imageName: "img/margot.jpg",
-              time: "01:27",
-              isSeen: false,
-              statusNum: 1,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "Margot",
+                imageName: "img/margot.jpg",
+                time: "01:27",
+                isSeen: false,
+                statusNum: 1,
+              ),
             ),
-            OtherStatus(
-              name: "Kaya",
-              imageName: "img/kaya.jpg",
-              time: "04:47",
-              isSeen: false,
-              statusNum: 2,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "Kaya",
+                imageName: "img/kaya.jpg",
+                time: "04:47",
+                isSeen: false,
+                statusNum: 2,
+              ),
             ),
-            OtherStatus(
-              name: "berta",
-              imageName: "img/berta.jpg",
-              time: "05:23",
-              isSeen: false,
-              statusNum: 3,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "berta",
+                imageName: "img/berta.jpg",
+                time: "05:23",
+                isSeen: false,
+                statusNum: 3,
+              ),
             ),
             SizedBox(
               height: 10,
             ),
             label("Viewed updates"),
-            OtherStatus(
-              name: "Margot",
-              imageName: "img/margot.jpg",
-              time: "01:27",
-              isSeen: true,
-              statusNum: 1,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "Margot",
+                imageName: "img/margot.jpg",
+                time: "01:27",
+                isSeen: true,
+                statusNum: 1,
+              ),
             ),
-            OtherStatus(
-              name: "Kaya",
-              imageName: "img/kaya.jpg",
-              time: "04:47",
-              isSeen: true,
-              statusNum: 2,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "Kaya",
+                imageName: "img/kaya.jpg",
+                time: "04:47",
+                isSeen: true,
+                statusNum: 2,
+              ),
             ),
-            OtherStatus(
-              name: "berta",
-              imageName: "img/berta.jpg",
-              time: "05:23",
-              isSeen: true,
-              statusNum: 10,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryPageView(),
+                ),
+              ),
+              child: OtherStatus(
+                name: "berta",
+                imageName: "img/berta.jpg",
+                time: "05:23",
+                isSeen: true,
+                statusNum: 10,
+              ),
             ),
           ],
         ),
