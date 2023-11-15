@@ -21,15 +21,15 @@ class ChatUser {
   late final String About;
   
   ChatUser.fromJson(Map<String, dynamic> json){
-    Email = json['Email'];
-    LastSeen = json['Last_seen'];
-    PushToken = json['Push_token'];
-    CreateAt = json['Create_at'];
-    Id = json['Id'];
-    Image = json['Image'];
-    IsOnline = json['Is_online'];
-    Name = json['Name'];
-    About = json['About'];
+    Email = json['Email'] ?? '';
+    LastSeen = json['Last_seen'] ?? '';
+    PushToken = json['Push_token'] ?? '';
+    CreateAt = json['Create_at'] ?? '';
+    Id = json['Id'] ?? '';
+    Image = json['Image'] ?? '';
+    IsOnline = json['Is_online'] ?? '';
+    Name = json['Name'] ?? '';
+    About = json['About'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
