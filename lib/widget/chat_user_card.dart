@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chat_user.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,19 +23,36 @@ class _chatUserCardState extends State<chatUserCard> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
         onTap: () {},
-        child:  ListTile(
-          leading: const CircleAvatar(
-            child: Icon(CupertinoIcons.person),
-          ),
-          title: Text(widget.user.Name),
-          subtitle: Text(widget.user.About,
-            maxLines: 1,
-          ),
-          trailing: const Text(
-            '13:00',
-            style: TextStyle(color: Colors.black54),
-          ),
-        ),
+        child: ListTile(
+            // leading: const CircleAvatar child: Icon(CupertinoIcons.person),
+// ),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(mq.height * .3),
+              child: CachedNetworkImage(
+                  width: mq.height * .055,
+                  height: mq.height * .055,
+                  imageUrl: widget.user.Image,
+                  // placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      CircleAvatar(child: Icon(CupertinoIcons.person))),
+            ),
+            title: Text(widget.user.Name),
+            subtitle: Text(
+              widget.user.About,
+              maxLines: 1,
+            ),
+            trailing: Container(
+              width: 15,
+              height: 15,
+              decoration: BoxDecoration(
+                  color: Colors.lightGreenAccent.shade400,
+                  borderRadius: BorderRadius.circular(10)),
+            )
+            //  trailing: const Text(
+            //  '13:00',
+            //  style: TextStyle(color: Colors.black54),
+//  ),
+            ),
       ),
     );
   }
