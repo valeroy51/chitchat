@@ -19,7 +19,9 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
-  List<ChatUser> list = [];
+  List<ChatUser> _list = [];
+  final List<ChatUser> _searchList = [];
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -33,16 +35,43 @@ class _homeScreenState extends State<homeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(CupertinoIcons.home),
-        title: const Text('ChitChat'),
+        title: _isSearching
+            ? TextField(
+                decoration: InputDecoration(
+                    border: InputBorder.none, hintText: 'Name, Email, ...'),
+                autofocus: true,
+                style: TextStyle(fontSize: 17, letterSpacing: 0.5),
+                onChanged: (val) {
+                  _searchList.clear();
+                  for (var i in _list) {
+                    if (i.Name.toLowerCase().contains(val.toLowerCase()) ||
+                        i.Email.toLowerCase().contains(val.toLowerCase())) {
+                          _searchList.add(i);
+                        }
+                    setState(() {
+                      _searchList;
+                    });
+                  }
+                },
+              )
+            : Text('ChitChat'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  _isSearching = !_isSearching;
+                });
+              },
+              icon: Icon(_isSearching
+                  ? CupertinoIcons.clear_circled_solid
+                  : Icons.search)),
           IconButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => ProfileScreen(user:apis.me,
-                              
+                        builder: (_) => ProfileScreen(
+                              user: apis.me,
                             )));
               },
               icon: const Icon(Icons.more_vert))
@@ -69,17 +98,17 @@ class _homeScreenState extends State<homeScreen> {
             case ConnectionState.active:
             case ConnectionState.done:
               final data = snapshot.data?.docs;
-              list =
+              _list =
                   data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-              if (list.isNotEmpty) {
+              if (_list.isNotEmpty) {
                 return ListView.builder(
-                    itemCount: list.length,
+                    itemCount: _isSearching ? _searchList.length : _list.length,
                     // padding: EdgeInsets.only(top: mq.height * .01),
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       return chatUserCard(
-                        user: list[index],
+                        user: _isSearching ? _searchList[index] : _list[index],
                       );
                       // return Text('Name : ${list[index]}');
                     });

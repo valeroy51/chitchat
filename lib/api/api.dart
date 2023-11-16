@@ -51,8 +51,8 @@ me = ChatUser.fromJson(user.data()!);
 
   static Future<void> updateUserInfo() async {
     await firestore.collection('Users').doc(user.uid).update({
-      'name': me.Name,
-      'about': me.About,
+      'Name': me.Name,
+      'About': me.About,
     });
   }
 }
