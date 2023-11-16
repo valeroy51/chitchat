@@ -45,6 +45,14 @@ me = ChatUser.fromJson(user.data()!);
   } 
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUser(){
-    return firestore.collection('Users').where("id" , isNotEqualTo: user.uid).snapshots();
+    return firestore.collection('Users').snapshots();
+  }
+
+
+  static Future<void> updateUserInfo() async {
+    await firestore.collection('Users').doc(user.uid).update({
+      'name': me.Name,
+      'about': me.About,
+    });
   }
 }
