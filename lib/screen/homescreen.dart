@@ -45,10 +45,10 @@ class _homeScreenState extends State<homeScreen> {
             leading: const Icon(CupertinoIcons.home),
             title: _isSearching
                 ? TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: InputBorder.none, hintText: 'Name, Email, ...'),
                     autofocus: true,
-                    style: TextStyle(fontSize: 17, letterSpacing: 0.5),
+                    style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
                     onChanged: (val) {
                       _searchList.clear();
                       for (var i in _list) {
@@ -62,7 +62,7 @@ class _homeScreenState extends State<homeScreen> {
                       }
                     },
                   )
-                : Text('ChitChat'),
+                : const Text('ChitChat'),
             actions: [
               IconButton(
                   onPressed: () {
@@ -115,7 +115,7 @@ class _homeScreenState extends State<homeScreen> {
                         itemCount:
                             _isSearching ? _searchList.length : _list.length,
                         // padding: EdgeInsets.only(top: mq.height * .01),
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return chatUserCard(
                             user: _isSearching

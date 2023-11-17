@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chat_user.dart';
+import 'package:chitchat/screen/chatscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chitchat/screen/chat_screen.dart';
 
 class chatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -24,8 +24,8 @@ class _chatUserCardState extends State<chatUserCard> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context, MaterialPageRoute(builder: (_) =>ChatScreen(user: widget.user)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => chatScreen(user: widget.user)));
         },
         child: ListTile(
             // leading: const CircleAvatar child: Icon(CupertinoIcons.person),
@@ -38,7 +38,7 @@ class _chatUserCardState extends State<chatUserCard> {
                   imageUrl: widget.user.Image,
                   // placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
-                      CircleAvatar(child: Icon(CupertinoIcons.person))),
+                      const CircleAvatar(child: Icon(CupertinoIcons.person))),
             ),
             title: Text(widget.user.Name),
             subtitle: Text(
