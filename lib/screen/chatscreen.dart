@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chitchat/api/api.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chat_user.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +28,48 @@ class _chatScreenState extends State<chatScreen> {
         ),
 
         body: Column(
-          children: [_chatInput()],
+          children: [
+            Expanded(
+              child: StreamBuilder(
+              stream: apis.getAllMessages(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.none:
+                    return const Center(child: CircularProgressIndicator());
+            
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                  final data = snapshot.data?.docs;
+                  log('Data: ${jsonEncode(data![0].data())}');
+                    // _list =
+                    //     data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                    //         [];
+            
+                    final _list = [];
+            
+                    if (_list.isNotEmpty) {
+                      return ListView.builder(
+                          itemCount:
+                              _list.length,
+                          // padding: EdgeInsets.only(top: mq.height * .01),
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) { 
+                            return Text('Name : ${_list[index]}');
+                          });
+                    } else {
+                      return const Center(
+                          child: Text(
+                        'Say Hi !!!',
+                        style: TextStyle(fontSize: 20),
+                      ));
+                    }
+                }
+              },
+                      ),
+            ),
+            
+            _chatInput()],
         ),
       ),
     );
@@ -134,4 +179,6 @@ class _chatScreenState extends State<chatScreen> {
       ),
     );
   }
+  
+  
 }
