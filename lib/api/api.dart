@@ -16,38 +16,41 @@ class apis {
   }
 
   static Future<void> getSelfinfo() async {
-   await firestore.collection('Users').doc(user.uid).get().then((user) async{
-    if(user.exists){
-me = ChatUser.fromJson(user.data()!);
-
-    }else{
-     await createUser().then((value) => getSelfinfo());
-    }
-
-   });
-}
+    await firestore.collection('Users').doc(user.uid).get().then((user) async {
+      if (user.exists) {
+        me = ChatUser.fromJson(user.data()!);
+      } else {
+        await createUser().then((value) => getSelfinfo());
+      }
+    });
+  }
 
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-      Id: user.uid,
-      Name: user.displayName.toString(),
-      Email: user.email.toString(),
-      About: "Hey There I am using ChitChat",
-      Image: user.photoURL.toString(),
-      CreateAt: time,
-      IsOnline: false,
-      LastSeen: time,
-      PushToken: '');
+        Id: user.uid,
+        Name: user.displayName.toString(),
+        Email: user.email.toString(),
+        About: "Hey There I am using ChitChat",
+        Image: user.photoURL.toString(),
+        CreateAt: time,
+        IsOnline: false,
+        LastSeen: time,
+        PushToken: '');
 
-    return await firestore.collection('Users').doc(user.uid).set(chatUser.toJson());
-  } 
-
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUser(){
-    return firestore.collection('Users').snapshots();
+    return await firestore
+        .collection('Users')
+        .doc(user.uid)
+        .set(chatUser.toJson());
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUser() {
+    return firestore
+        .collection('Users')
+        .where('Id', isNotEqualTo: user.uid)
+        .snapshots();
+  }
 
   static Future<void> updateUserInfo() async {
     await firestore.collection('Users').doc(user.uid).update({
