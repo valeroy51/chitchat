@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/main.dart';
@@ -28,7 +31,7 @@ class _chatScreenState extends State<chatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-              stream: apis.getAllUser(),
+              stream: apis.getAllMessages(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -37,7 +40,8 @@ class _chatScreenState extends State<chatScreen> {
             
                   case ConnectionState.active:
                   case ConnectionState.done:
-                    // final data = snapshot.data?.docs;
+                  final data = snapshot.data?.docs;
+                  log('Data: ${jsonEncode(data![0].data())}');
                     // _list =
                     //     data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
                     //         [];
@@ -175,4 +179,6 @@ class _chatScreenState extends State<chatScreen> {
       ),
     );
   }
+  
+  
 }
