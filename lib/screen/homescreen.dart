@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chat_user.dart';
-import 'package:chitchat/screen/profile_screen.dart';
+import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
