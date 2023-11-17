@@ -68,13 +68,13 @@ class _loginScreenState extends State<loginScreen> {
           log('User: ${user.user}');
           log('UserAdditionalInfo: ${user.additionalUserInfo}');
 
-          if(await apis.userExists()){
+          if (await apis.userExists()) {
             Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const homeScreen()));
-          }else{
+                context, MaterialPageRoute(builder: (_) => const homeScreen()));
+          } else {
             await apis.createUser().then((value) {
-              Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const homeScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const homeScreen()));
             });
           }
         }
