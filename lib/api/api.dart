@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,9 +83,30 @@ class apis {
         .update({'Image': me.Image});
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+  static String getConversationID(String Id) => user.uid.hashCode <= Id.hashCode 
+      ? '${user.uid}_$Id'
+      : '${Id}_${user.uid}';
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
     return firestore
-        .collection('Messages')
+        .collection('Chats/${getConversationID(user.Id)}/Messages/')
         .snapshots();
+  }
+
+  static Future<void> sendMessage(ChatUser chatUser, String msg) async {
+
+    final time = DateTime.now().microsecondsSinceEpoch.toString();
+
+    final Messages messages = Messages(
+      msg: msg, 
+      read: '', 
+      told: chatUser.Id, 
+      type: Type.text, sent: time, 
+      fromId: user.uid);
+
+    final ref = 
+        firestore.collection('Chats/${getConversationID(chatUser.Id)}/Messages/');
+    await ref.doc(time).set(messages.toJson());
   }
 }

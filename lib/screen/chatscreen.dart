@@ -22,6 +22,8 @@ class chatScreen extends StatefulWidget {
 class _chatScreenState extends State<chatScreen> {
   List<Messages> _list = [];
 
+  final _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,41 +39,26 @@ class _chatScreenState extends State<chatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-              stream: apis.getAllMessages(),
+              stream: apis.getAllMessages(widget.user),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                    return const Center(child: CircularProgressIndicator());
+                    return const SizedBox();
             
                   case ConnectionState.active:
                   case ConnectionState.done:
                   final data = snapshot.data?.docs;
-                  log('Data: ${jsonEncode(data![0].data())}');
-                    // _list =
-                    //     data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                    //         [];
-                    _list.clear();
-                    _list.add(Messages(
-                      msg: 'Hii', 
-                      read: '', 
-                      told: 'xyz', 
-                      type: Type.text, 
-                      sent: '12.00 AM', 
-                      fromId: apis.user.uid));
-                    _list.add(Messages(
-                      msg: 'Hello', 
-                      read: '', 
-                      told: apis.user.uid, 
-                      type: Type.text, 
-                      sent: '12.05 AM', 
-                      fromId: 'xyz'));
+                    _list =
+                        data?.map((e) => Messages.fromJson(e.data())).toList() ??
+                            [];
+                    
 
                     if (_list.isNotEmpty) {
                       return ListView.builder(
                           itemCount:
                               _list.length,
-                          // padding: EdgeInsets.only(top: mq.height * .01),
+                          padding: EdgeInsets.only(top: mq.height * .01),
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) { 
                             return MessageCard(message: _list[index]);
@@ -161,10 +148,12 @@ class _chatScreenState extends State<chatScreen> {
                             size: 25
                           )),
           
-                   const Expanded(child: TextField(
+                  Expanded(
+                      child: TextField(
+                    controller: _textController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Type a message",
                       hintStyle: TextStyle(color: Colors.blueAccent),
                       border: InputBorder.none
@@ -188,7 +177,12 @@ class _chatScreenState extends State<chatScreen> {
               ],),),
           ),
     
-          MaterialButton(onPressed: (){},
+          MaterialButton(onPressed: (){
+            if(_textController.text.isNotEmpty) {
+              apis.sendMessage(widget.user, _textController.text);
+              _textController.text = '';
+            }
+          },
             color: Colors.green,
             minWidth: 0,
             padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
