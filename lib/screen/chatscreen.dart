@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chat_user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class chatScreen extends StatefulWidget {
@@ -20,6 +21,10 @@ class _chatScreenState extends State<chatScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
+        ),
+
+        body: Column(
+          children: [_chatInput()],
         ),
       ),
     );
@@ -69,6 +74,62 @@ class _chatScreenState extends State<chatScreen> {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _chatInput() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: mq.height * .01, horizontal: mq.width * .025),
+      child: Row(
+        children: [
+          Expanded(
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              child :Row(
+                children: [
+                  IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.emoji_emotions,
+                            color: Colors.blueAccent,
+                            size: 25
+                          )),
+          
+                   const Expanded(child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: "Type a message",
+                      hintStyle: TextStyle(color: Colors.blueAccent),
+                      border: InputBorder.none
+                    ),
+                  )),
+          
+                  IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.image,
+                            color: Colors.blueAccent,
+                            size: 26
+                          )),
+                    IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.camera_alt_rounded,
+                            color: Colors.blueAccent,
+                          )),
+                    SizedBox(width: mq.width * .02,)
+              ],),),
+          ),
+    
+          MaterialButton(onPressed: (){},
+            color: Colors.green,
+            minWidth: 0,
+            padding: const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
+            shape: CircleBorder(),
+            child: Icon(Icons.send, color: Colors.white, size: 28),)
         ],
       ),
     );
