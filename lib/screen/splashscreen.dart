@@ -1,9 +1,7 @@
 import 'dart:developer';
-
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:chitchat/screen/login/loginscreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,7 +21,7 @@ class _splashScreenState extends State<splashScreen> {
     Future.delayed(const Duration(seconds: 5), () {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(systemNavigationBarColor: Colors.white));
 
       if (apis.auth.currentUser != null) {
         log("User: ${apis.auth.currentUser}");

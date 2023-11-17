@@ -7,13 +7,16 @@ environment:
   sdk: ">=3.1.3 <4.0.0"
 
 dependencies:
+  cached_network_image: ^3.3.0
   cloud_firestore: ^4.13.0
   cupertino_icons: ^1.0.6
   firebase_auth: ^4.13.0
   firebase_core: ^2.21.0
+  firebase_storage: ^11.5.1
   flutter:
     sdk: flutter
   google_sign_in: ^6.1.6
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
@@ -38,3 +41,5 @@ flutter:
     - img/logo12.png
     - img/other.png
     - img/Logo dark.png
+    - img/camera.png
+    - img/gallery.png

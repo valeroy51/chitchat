@@ -38,6 +38,7 @@
           }
         },
         {
+<<<<<<< HEAD
           "client_id": "835382712410-s0t6ku2nq67bnmpiqmo5jc737j2mn5ah.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -46,6 +47,8 @@
           }
         },
         {
+=======
+>>>>>>> 3b24e614e6e241513e0e113fbd4ce822c6aab7a6
           "client_id": "835382712410-t8t7mvn9dnkm7r69svkiu2969vuk115f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -83,6 +86,7 @@
     },
     {
       "client_info": {
+<<<<<<< HEAD
         "mobilesdk_app_id": "1:835382712410:android:9abbd6326bd5e4557e2063",
         "android_client_info": {
           "package_name": "com.example.project_akhir"
@@ -119,6 +123,8 @@
     },
     {
       "client_info": {
+=======
+>>>>>>> 3b24e614e6e241513e0e113fbd4ce822c6aab7a6
         "mobilesdk_app_id": "1:835382712410:android:700d2aeb3ad9a92c7e2063",
         "android_client_info": {
           "package_name": "com.example.project_uts"
