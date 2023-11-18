@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:chitchat/api/api.dart';
+import 'package:chitchat/helper/my_date_util.dart';
 import 'package:chitchat/main.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +25,11 @@ class _MessageCardState extends State<MessageCard> {
   }
 
   Widget _blueMessage() {
+
+    if(widget.message.read.isNotEmpty){
+      apis.updateMessageReadStatus(widget.message);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -40,7 +48,7 @@ class _MessageCardState extends State<MessageCard> {
                   topRight: Radius.circular(30),
                   bottomRight: Radius.circular(30))),
             child: Text(
-              widget.message.msg,
+              MyDateUtil.getFormattedTime(context: context, time: widget.message.sent),
               style: const TextStyle(fontSize: 15, color: Colors.black87),
               ),
           ),
@@ -66,12 +74,13 @@ class _MessageCardState extends State<MessageCard> {
 
             SizedBox(width: mq.width * .04),
 
-            const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
+            if(widget.message.read.isNotEmpty)
+              const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
 
             const SizedBox(width: 2),
 
             Text(
-              '${widget.message.read}12.00',
+              MyDateUtil.getFormattedTime(context: context, time: widget.message.sent),
               style: const TextStyle(fontSize: 13, color: Colors.black54),
             ),
           ],
