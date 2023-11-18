@@ -14,9 +14,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
-
   const ProfileScreen({super.key, required this.user});
-
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -24,7 +22,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _image;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -217,9 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           setState(() {
                             _image = image.path;
                           });
-
                           apis.updateProfilePicture(File(_image!));
-
                           Navigator.pop(context);
                         }
                       },

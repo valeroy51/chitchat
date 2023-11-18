@@ -11,16 +11,13 @@ import 'package:flutter/services.dart';
 class chatScreen extends StatefulWidget {
   final ChatUser user;
   const chatScreen({super.key, required this.user});
-
   @override
   State<chatScreen> createState() => _chatScreenState();
 }
 
 class _chatScreenState extends State<chatScreen> {
   List<Messages> _list = [];
-
   final _textController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -20,9 +20,9 @@ class _splashScreenState extends State<splashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(systemNavigationBarColor: 
-          Colors.white, statusBarColor: Colors.white));
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          statusBarColor: Colors.white));
 
       if (apis.auth.currentUser != null) {
         log("User: ${apis.auth.currentUser}");
