@@ -6,6 +6,7 @@ import 'package:chitchat/helper/dialog.dart';
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../main.dart';
@@ -53,11 +54,6 @@ class _loginScreenState extends State<loginScreen> {
     }
   }
 
-  // _signOut() async {
-  //await FirebaseAuth.instance.signOut();
-  //await GoogleSignIn().signOut();
-  //}
-
   @override
   Widget build(BuildContext context) {
     _googleButton() {
@@ -85,6 +81,8 @@ class _loginScreenState extends State<loginScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Welcome'),
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
       ),
       body: Stack(children: [
         AnimatedPositioned(
