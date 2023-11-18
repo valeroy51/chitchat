@@ -11,7 +11,7 @@ class apis {
   static FirebaseAuth auth = FirebaseAuth.instance;
 
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
+
   static FirebaseStorage storage = FirebaseStorage.instance;
 
   static late ChatUser me;
@@ -83,7 +83,7 @@ class apis {
         .update({'Image': me.Image});
   }
 
-  static String getConversationID(String Id) => user.uid.hashCode <= Id.hashCode 
+  static String getConversationID(String Id) => user.uid.hashCode <= Id.hashCode
       ? '${user.uid}_$Id'
       : '${Id}_${user.uid}';
 
@@ -95,22 +95,34 @@ class apis {
   }
 
   static Future<void> sendMessage(ChatUser chatUser, String msg) async {
-
     final time = DateTime.now().microsecondsSinceEpoch.toString();
 
     final Messages messages = Messages(
-      msg: msg, 
-      read: '', 
-      told: chatUser.Id, 
-      type: Type.text, sent: time, 
-      fromId: user.uid);
+        msg: msg,
+        read: '',
+        told: chatUser.Id,
+        type: Type.text,
+        sent: time,
+        fromId: user.uid);
 
-    final ref = 
-        firestore.collection('Chats/${getConversationID(chatUser.Id)}/Messages/');
+    final ref = firestore
+        .collection('Chats/${getConversationID(chatUser.Id)}/Messages/');
     await ref.doc(time).set(messages.toJson());
   }
 
-   static Future<void> updateMessageReadStatus(Messages messages) async {
-      firestore.collection('Chats/${getConversationID(messages.fromId)}/Messages/').doc(messages.sent).update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
-   }
+  static Future<void> updateMessageReadStatus(Messages messages) async {
+    firestore
+        .collection('Chats/${getConversationID(messages.fromId)}/Messages/')
+        .doc(messages.sent)
+        .update({'read': DateTime.now().microsecondsSinceEpoch.toString()});
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
+      ChatUser user) {
+    return firestore
+        .collection('Chats/${getConversationID(user.Id)}/Messages/')
+        .orderBy('sent', descending: true)
+        .limit(1)
+        .snapshots();
+  }
 }

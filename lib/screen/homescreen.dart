@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
-
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
@@ -17,7 +16,6 @@ class _homeScreenState extends State<homeScreen> {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -101,14 +99,12 @@ class _homeScreenState extends State<homeScreen> {
                 case ConnectionState.waiting:
                 case ConnectionState.none:
                   return const Center(child: CircularProgressIndicator());
-
                 case ConnectionState.active:
                 case ConnectionState.done:
                   final data = snapshot.data?.docs;
                   _list =
                       data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
                           [];
-
                   if (_list.isNotEmpty) {
                     return ListView.builder(
                         itemCount:
