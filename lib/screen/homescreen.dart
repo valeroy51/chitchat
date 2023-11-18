@@ -1,10 +1,10 @@
 import 'package:chitchat/api/api.dart';
-import 'package:chitchat/models/chat_user.dart';
+import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/services.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
@@ -84,14 +84,13 @@ class _homeScreenState extends State<homeScreen> {
                   },
                   icon: const Icon(Icons.more_vert))
             ],
+            systemOverlayStyle:
+                const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
           ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
-              onPressed: () async {
-                await apis.auth.signOut();
-                await GoogleSignIn().signOut();
-              },
+              onPressed: () {},
               child: const Icon(Icons.add_comment_rounded),
             ),
           ),

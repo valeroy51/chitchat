@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/main.dart';
-import 'package:chitchat/models/chat_user.dart';
+import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/chatscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _chatUserCardState extends State<chatUserCard> {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: mq.width * .001, vertical: 0.1),
-      color: Colors.blue.shade50,
+      color: Colors.lightBlue.shade50,
       elevation: 0.5,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
