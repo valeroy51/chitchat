@@ -1,8 +1,6 @@
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:chitchat/screen/status/StatusPage.dart';
-import 'package:chitchat/screen/status/StatusWidget.dart';
 import 'package:flutter/material.dart';
-
 import '../../main.dart';
 
 class loginScreen extends StatefulWidget {
@@ -56,7 +54,7 @@ class _loginScreenState extends State<loginScreen> {
                     elevation: 1),
                 onPressed: () {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const StatusPage()));
+                      MaterialPageRoute(builder: (_) => const homeScreen()));
                 },
                 icon: Image.asset(
                   'img/google.png',

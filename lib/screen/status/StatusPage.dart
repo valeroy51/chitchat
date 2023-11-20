@@ -14,14 +14,14 @@ class _StatusPageState extends State<StatusPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Icon(Icons.home),
-        title: const Text('ChitChat'),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
-        ],
-      ),
+      // appBar: AppBar(
+      //   leading: const Icon(Icons.home),
+      //   title: const Text('ChitChat'),
+      //   actions: [
+      //     IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+      //     IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+      //   ],
+      // ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
