@@ -1,25 +1,23 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/helper/dialog.dart';
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../main.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
-
   @override
   State<loginScreen> createState() => _loginScreenState();
 }
 
 class _loginScreenState extends State<loginScreen> {
   bool _isAnimated = false;
-
   @override
   void initState() {
     super.initState();
@@ -33,17 +31,13 @@ class _loginScreenState extends State<loginScreen> {
   Future<UserCredential?> _signInWithGoogle() async {
     try {
       await InternetAddress.lookup('google.com');
-
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
-
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-
       return await apis.auth.signInWithCredential(credential);
     } catch (e) {
       log('\nsignInWithGoogle: $e');
@@ -52,11 +46,6 @@ class _loginScreenState extends State<loginScreen> {
       return null;
     }
   }
-
-  // _signOut() async {
-  //await FirebaseAuth.instance.signOut();
-  //await GoogleSignIn().signOut();
-  //}
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +56,13 @@ class _loginScreenState extends State<loginScreen> {
         if (user != null) {
           log('User: ${user.user}');
           log('UserAdditionalInfo: ${user.additionalUserInfo}');
-
-          if(await apis.userExists()){
+          if (await apis.userExists()) {
             Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const homeScreen()));
-          }else{
+                context, MaterialPageRoute(builder: (_) => const homeScreen()));
+          } else {
             await apis.createUser().then((value) {
-              Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const homeScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const homeScreen()));
             });
           }
         }
@@ -85,6 +73,8 @@ class _loginScreenState extends State<loginScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Welcome'),
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
       ),
       body: Stack(children: [
         AnimatedPositioned(

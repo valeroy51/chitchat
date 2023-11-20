@@ -24,6 +24,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ChitChat',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
               centerTitle: true,

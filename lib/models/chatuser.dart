@@ -19,7 +19,7 @@ class ChatUser {
   late  bool IsOnline;
   late  String Name;
   late  String About;
-  
+
   ChatUser.fromJson(Map<String, dynamic> json){
     Email = json['Email'] ?? '';
     LastSeen = json['Last_seen'] ?? '';

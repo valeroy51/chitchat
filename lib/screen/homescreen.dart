@@ -1,19 +1,13 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:chitchat/api/api.dart';
-import 'package:chitchat/main.dart';
-import 'package:chitchat/models/chat_user.dart';
-import 'package:chitchat/screen/profile_screen.dart';
+import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/services.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
-
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
@@ -22,7 +16,6 @@ class _homeScreenState extends State<homeScreen> {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -50,10 +43,10 @@ class _homeScreenState extends State<homeScreen> {
             leading: const Icon(CupertinoIcons.home),
             title: _isSearching
                 ? TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: InputBorder.none, hintText: 'Name, Email, ...'),
                     autofocus: true,
-                    style: TextStyle(fontSize: 17, letterSpacing: 0.5),
+                    style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
                     onChanged: (val) {
                       _searchList.clear();
                       for (var i in _list) {
@@ -67,7 +60,7 @@ class _homeScreenState extends State<homeScreen> {
                       }
                     },
                   )
-                : Text('ChitChat'),
+                : const Text('ChitChat'),
             actions: [
               IconButton(
                   onPressed: () {
@@ -89,14 +82,13 @@ class _homeScreenState extends State<homeScreen> {
                   },
                   icon: const Icon(Icons.more_vert))
             ],
+            systemOverlayStyle:
+                const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
           ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
-              onPressed: () async {
-                await apis.auth.signOut();
-                await GoogleSignIn().signOut();
-              },
+              onPressed: () {},
               child: const Icon(Icons.add_comment_rounded),
             ),
           ),
@@ -107,20 +99,18 @@ class _homeScreenState extends State<homeScreen> {
                 case ConnectionState.waiting:
                 case ConnectionState.none:
                   return const Center(child: CircularProgressIndicator());
-
                 case ConnectionState.active:
                 case ConnectionState.done:
                   final data = snapshot.data?.docs;
                   _list =
                       data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
                           [];
-
                   if (_list.isNotEmpty) {
                     return ListView.builder(
                         itemCount:
                             _isSearching ? _searchList.length : _list.length,
                         // padding: EdgeInsets.only(top: mq.height * .01),
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return chatUserCard(
                             user: _isSearching
