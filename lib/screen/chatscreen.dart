@@ -6,6 +6,7 @@ import 'package:chitchat/api/api.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/screen/viewprofilescreen.dart';
 import 'package:chitchat/widget/message_card.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -124,7 +125,12 @@ class _chatScreenState extends State<chatScreen> {
 
   Widget _appBar() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+          builder: (_) => ViewProfileScreen(user: widget.user)));
+      },
       child: StreamBuilder(stream: apis.getUserInfo(widget.user), 
       builder: (context, snapshot) {
         final data = snapshot.data?.docs;

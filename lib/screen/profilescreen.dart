@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/login/loginscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,11 +39,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             backgroundColor: Colors.redAccent,
             onPressed: () async {
               dialog.showProgressBar(context);
+
+              await apis.updateActiveStatus(false);
+
               await apis.auth.signOut().then((value) async {
                 await GoogleSignIn().signOut().then((value) {
                   Navigator.pop(context);
 
                   Navigator.pop(context);
+
+                  apis.auth = FirebaseAuth.instance;
 
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (_) => const loginScreen()));
