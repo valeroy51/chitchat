@@ -59,7 +59,11 @@ class _chatUserCardState extends State<chatUserCard> {
                   ),
                   title: Text(widget.user.Name),
                   subtitle: Text(
-                    _message != null ? _message!.msg : widget.user.About,
+                    _message != null 
+                    ? _message!.type == Type.image
+                        ? 'image'
+                        : _message!.msg 
+                    : widget.user.About,
                     maxLines: 1,
                   ),
                   trailing: _message == null
