@@ -1,3 +1,4 @@
+import 'package:chitchat/screen/call/call_screen.dart';
 import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class _homeScreenState extends State<homeScreen>
       ),
       body: TabBarView(
         controller: _controller,
-        children: [Text("Chat"), StatusPage(), Text("Call")],
+        children: [Text("Chat"), StatusPage(), CallScreen()],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),

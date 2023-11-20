@@ -57,10 +57,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "Margot",
                 imageName: "img/margot.jpg",
                 time: "01:27",

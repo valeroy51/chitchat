@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
 
 class StoryPageView extends StatelessWidget {
+  const StoryPageView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final controller = StoryController();
