@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../helper/mydateutil.dart';
+
 class chatScreen extends StatefulWidget {
   final ChatUser user;
   const chatScreen({super.key, required this.user});
@@ -123,7 +125,14 @@ class _chatScreenState extends State<chatScreen> {
   Widget _appBar() {
     return InkWell(
       onTap: () {},
-      child: Row(
+      child: StreamBuilder(stream: apis.getUserInfo(widget.user), 
+      builder: (context, snapshot) {
+        final data = snapshot.data?.docs;
+        final list =
+            data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+        
+
+        return Row(
         children: [
           IconButton(
               onPressed: () => Navigator.pop(context),
@@ -136,7 +145,7 @@ class _chatScreenState extends State<chatScreen> {
             child: CachedNetworkImage(
                 width: mq.height * .05,
                 height: mq.height * .05,
-                imageUrl: widget.user.Image,
+                imageUrl: list.isNotEmpty ? list[0].Image :widget.user.Image,
                 // placeholder: (context, url) => CircularProgressIndicator(),
                 errorWidget: (context, url, error) =>
                     const CircleAvatar(child: Icon(CupertinoIcons.person))),
@@ -148,8 +157,7 @@ class _chatScreenState extends State<chatScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.user.Name,
+              Text( list.isNotEmpty ? list[0].Name : widget.user.Name,
                 style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -158,15 +166,22 @@ class _chatScreenState extends State<chatScreen> {
               const SizedBox(
                 height: 2,
               ),
-              const Text(
-                'Last seen not available',
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              )
+              Text(
+                  list.isNotEmpty 
+                      ? list[0].IsOnline
+                        ? 'Online'
+                        : MyDateUtil().getLastActiveTime(
+                          context: context, 
+                          lastActive: list[0].LastSeen)
+                      : MyDateUtil().getLastActiveTime(
+                        context: context, 
+                        lastActive: widget.user.LastSeen),
+                  style:  TextStyle(fontSize: 13, color: Colors.black54)),
             ],
           )
         ],
-      ),
-    );
+      );
+    }  ));
   }
 
   Widget _chatInput() {
