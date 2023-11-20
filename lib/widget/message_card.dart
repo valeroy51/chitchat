@@ -50,12 +50,17 @@ class _MessageCardState extends State<MessageCard> {
             Text(
               widget.message.msg,
               style: const TextStyle(fontSize: 15, color: Colors.black87),
-            ): ClipRRect(
+            ): 
+            
+            ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: CachedNetworkImage(
                 imageUrl: widget.message.msg,
                 placeholder: (context, url) => 
-                    const CircularProgressIndicator(strokeWidth: 2),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
                 errorWidget: (context, url, error) =>
                     const Icon(Icons.image, size: 70)
                 )
@@ -115,7 +120,10 @@ class _MessageCardState extends State<MessageCard> {
             child: CachedNetworkImage(
                 imageUrl: widget.message.msg,
                 placeholder: (context, url) => 
-                    const CircularProgressIndicator(strokeWidth: 2),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
                 errorWidget: (context, url, error) =>
                     const Icon(Icons.image, size: 70)
                 )

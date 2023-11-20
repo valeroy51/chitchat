@@ -24,7 +24,7 @@ class _chatScreenState extends State<chatScreen> {
   List<Messages> _list = [];
   final _textController = TextEditingController();
 
-  bool _showEmoji = false;
+  bool _showEmoji = false, _isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +71,7 @@ class _chatScreenState extends State<chatScreen> {
 
                           if (_list.isNotEmpty) {
                             return ListView.builder(
+                                reverse: true,
                                 itemCount: _list.length,
                                 padding: EdgeInsets.only(top: mq.height * .01),
                                 physics: const BouncingScrollPhysics(),
@@ -88,6 +89,15 @@ class _chatScreenState extends State<chatScreen> {
                     },
                   ),
                 ),
+                
+
+                if(_isUploading)
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    child: CircularProgressIndicator(strokeWidth: 2))),
+
                 _chatInput(),
                 if (_showEmoji)
                   SizedBox(
@@ -203,8 +213,9 @@ class _chatScreenState extends State<chatScreen> {
                             await picker.pickImage(source: ImageSource.camera, imageQuality: 70);
                         if (image != null) {
                           log('image path: ${image.path}');
-
+                          setState(() => _isUploading = true);
                           await apis.sendChatImage(widget.user, File(image.path));
+                          setState(() => _isUploading = false);
                         }
                       },
                       icon: const Icon(
