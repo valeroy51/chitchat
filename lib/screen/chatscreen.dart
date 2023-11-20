@@ -202,7 +202,19 @@ class _chatScreenState extends State<chatScreen> {
                         border: InputBorder.none),
                   )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        
+                        final List<XFile>? images = 
+                          await picker.pickMultiImage(imageQuality: 70);
+                        
+                        for (var i in images!) {
+                          log('image path: ${i.path}');
+                          setState(() => _isUploading = true);
+                          await apis.sendChatImage(widget.user, File(i.path));
+                          setState(() => _isUploading = false);
+                          }
+                        },
                       icon: const Icon(Icons.image,
                           color: Colors.blueAccent, size: 26)),
                   IconButton(
