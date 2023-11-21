@@ -27,7 +27,7 @@ class apis {
     await fMessaging.getToken().then((t) {
       if (t != null) {
         me.PushToken = t;
-        log('Push Token: $t');
+        log('Push Token:$t');
       }
     });
   }
@@ -40,9 +40,9 @@ class apis {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        log('My Data: ${user.data()}');
         await getFirebaseMessagingToken();
         apis.updateActiveStatus(true);
+        log('My Data: ${user.data()}');
       } else {
         await createUser().then((value) => getSelfinfo());
       }
