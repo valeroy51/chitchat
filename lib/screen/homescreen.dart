@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:chitchat/api/api.dart';
+import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
@@ -18,9 +21,24 @@ class _homeScreenState extends State<homeScreen> {
   bool _isSearching = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     apis.getSelfinfo();
+
+    apis.updateActiveStatus(true);
+
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('Messages: $message');
+      if(apis.auth.currentUser != null) {
+      if(message.toString().contains('resume')) {
+        apis.updateActiveStatus(true);
+      }
+      if(message.toString().contains('pause')) {
+        apis.updateActiveStatus(false);
+      }
+      }
+
+      return Future.value(message);
+    });
   }
 
   @override

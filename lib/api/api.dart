@@ -83,6 +83,22 @@ class apis {
         .update({'Image': me.Image});
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+    ChatUser chatUser) {
+        return firestore
+        .collection('Users')
+        .where('Id', isEqualTo: chatUser.Id)
+        .snapshots();
+    }
+
+  static Future<void> updateActiveStatus(bool IsOnline) async{
+    firestore
+        .collection('Users').doc(user.uid).update({
+          'Is_online' : IsOnline, 
+          'Last_seen' : DateTime.now().millisecondsSinceEpoch.toString()});
+  }
+
+
   static String getConversationID(String Id) => user.uid.hashCode <= Id.hashCode
       ? '${user.uid}_$Id'
       : '${Id}_${user.uid}';
