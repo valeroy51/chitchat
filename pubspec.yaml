@@ -18,6 +18,7 @@ dependencies:
   google_sign_in: ^6.1.6
   image_picker: ^1.0.4
   emoji_picker_flutter: ^1.6.3
+  firebase_messaging: ^14.7.4
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"

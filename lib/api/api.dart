@@ -5,6 +5,7 @@ import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class apis {
@@ -18,6 +19,19 @@ class apis {
 
   static User get user => auth.currentUser!;
 
+  static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+
+  static Future<void> getFirebaseMessagingToken() async {
+    await fMessaging.requestPermission();
+
+    await fMessaging.getToken().then((t) {
+      if (t != null) {
+        me.PushToken = t;
+        log('Push Token: $t');
+      }
+    });
+  }
+
   static Future<bool> userExists() async {
     return (await firestore.collection('Users').doc(user.uid).get()).exists;
   }
@@ -26,6 +40,9 @@ class apis {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
+        log('My Data: ${user.data()}');
+        await getFirebaseMessagingToken();
+        apis.updateActiveStatus(true);
       } else {
         await createUser().then((value) => getSelfinfo());
       }
@@ -84,20 +101,20 @@ class apis {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
-    ChatUser chatUser) {
-        return firestore
+      ChatUser chatUser) {
+    return firestore
         .collection('Users')
         .where('Id', isEqualTo: chatUser.Id)
         .snapshots();
-    }
-
-  static Future<void> updateActiveStatus(bool IsOnline) async{
-    firestore
-        .collection('Users').doc(user.uid).update({
-          'Is_online' : IsOnline, 
-          'Last_seen' : DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
+  static Future<void> updateActiveStatus(bool IsOnline) async {
+    firestore.collection('Users').doc(user.uid).update({
+      'Is_online': IsOnline,
+      'Last_seen': DateTime.now().millisecondsSinceEpoch.toString(),
+      'push_token': me.PushToken,
+    });
+  }
 
   static String getConversationID(String Id) => user.uid.hashCode <= Id.hashCode
       ? '${user.uid}_$Id'
@@ -111,7 +128,8 @@ class apis {
         .snapshots();
   }
 
-  static Future<void> sendMessage(ChatUser chatUser, String msg, Type type) async {
+  static Future<void> sendMessage(
+      ChatUser chatUser, String msg, Type type) async {
     final time = DateTime.now().microsecondsSinceEpoch.toString();
 
     final Messages messages = Messages(
@@ -147,7 +165,7 @@ class apis {
     final ext = file.path.split('.').last;
 
     final ref = storage.ref().child(
-      'Images/${getConversationID(chatUser.Id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+        'Images/${getConversationID(chatUser.Id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
     await ref
         .putFile(file, SettableMetadata(contentType: 'Image/$ext'))
