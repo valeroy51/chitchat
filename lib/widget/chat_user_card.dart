@@ -5,6 +5,7 @@ import 'package:chitchat/main.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/chatscreen.dart';
+import 'package:chitchat/widget/dialogs/profile_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,24 +47,31 @@ class _chatUserCardState extends State<chatUserCard> {
                 return ListTile(
                   // leading: const CircleAvatar child: Icon(CupertinoIcons.person),
 // ),
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .3),
-                    child: CachedNetworkImage(
-                        width: mq.height * .055,
-                        height: mq.height * .055,
-                        imageUrl: widget.user.Image,
-                        // placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const CircleAvatar(
-                                child: Icon(CupertinoIcons.person))),
+                  leading: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => ProfileDialog(user: widget.user));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(mq.height * .3),
+                      child: CachedNetworkImage(
+                          width: mq.height * .055,
+                          height: mq.height * .055,
+                          imageUrl: widget.user.Image,
+                          // placeholder: (context, url) => CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person))),
+                    ),
                   ),
                   title: Text(widget.user.Name),
                   subtitle: Text(
-                    _message != null 
-                    ? _message!.type == Type.image
-                        ? 'image'
-                        : _message!.msg 
-                    : widget.user.About,
+                    _message != null
+                        ? _message!.type == Type.image
+                            ? 'image'
+                            : _message!.msg
+                        : widget.user.About,
                     maxLines: 1,
                   ),
                   trailing: _message == null

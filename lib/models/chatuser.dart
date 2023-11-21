@@ -1,3 +1,4 @@
+
 class ChatUser {
   ChatUser({
     required this.Email,
