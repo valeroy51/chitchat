@@ -30,6 +30,7 @@ class ChatUser {
     Name = json['Name'] ?? '';
     About = json['About'] ?? '';
   }
+
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['Email'] = Email;

@@ -5,6 +5,7 @@ import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
@@ -21,6 +22,7 @@ class apis {
   static late ChatUser me;
 
   static User get user => auth.currentUser!;
+
 
   static Future<void> getFirebaseMessagingToken() async {
     await fmessaging.requestPermission();
@@ -68,6 +70,7 @@ class apis {
       log('Response body: ${response.body}');
     } catch (e) {
       log('\nsendPushNotificationE : $e');
+
     }
   }
 
@@ -81,7 +84,9 @@ class apis {
         me = ChatUser.fromJson(user.data()!);
         await getFirebaseMessagingToken();
         apis.updateActiveStatus(true);
+
         log('My data: ${user.data()}');
+
       } else {
         await createUser().then((value) => getSelfinfo());
       }
@@ -151,7 +156,9 @@ class apis {
     firestore.collection('Users').doc(user.uid).update({
       'Is_online': IsOnline,
       'Last_seen': DateTime.now().millisecondsSinceEpoch.toString(),
+
       'Push_token': me.PushToken
+
     });
   }
 
