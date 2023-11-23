@@ -31,13 +31,30 @@ class apis {
         log('Token : $token');
       }
     });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  log('Got a message whilst in the foreground!');
+  log('Message data: ${message.data}');
+
+  if (message.notification != null) {
+    log('Message also contained a notification: ${message.notification}');
+  }
+});
+
   }
 
   static Future<void> sendPushNotification(ChatUser user, String msg) async {
     try {
       final body = {
         "to": user.PushToken,
-        "notification": {"title": user.Name, "body": msg}
+        "notification": {
+          "title": user.Name,
+          "body": msg,
+          "android_channel_id": "Chats"
+        },
+        "data": {
+          "Data": "User ID : ${me.Id}",
+        },
       };
       var response =
           await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
