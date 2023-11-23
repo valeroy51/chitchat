@@ -22,8 +22,6 @@ class _homeScreenState extends State<homeScreen> {
     super.initState();
     apis.getSelfinfo();
 
-    apis.updateActiveStatus(true);
-
     SystemChannels.lifecycle.setMessageHandler((message) {
       log('Messages: $message');
       if (apis.auth.currentUser != null) {
