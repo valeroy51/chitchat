@@ -5,7 +5,7 @@ import 'package:chitchat/main.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/chatscreen.dart';
-import 'package:chitchat/widget/dialogs/profile_dialog.dart';
+import 'package:chitchat/widget/dialog/profiledialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,6 @@ class chatUserCard extends StatefulWidget {
 
 class _chatUserCardState extends State<chatUserCard> {
   Messages? _message;
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -43,7 +42,6 @@ class _chatUserCardState extends State<chatUserCard> {
                 if (list.isNotEmpty) {
                   _message = list[0];
                 }
-
                 return ListTile(
                   // leading: const CircleAvatar child: Icon(CupertinoIcons.person),
 // ),

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
 
 class apis {
@@ -17,47 +17,60 @@ class apis {
 
   static FirebaseStorage storage = FirebaseStorage.instance;
 
+  static FirebaseMessaging fmessaging = FirebaseMessaging.instance;
+
   static late ChatUser me;
 
   static User get user => auth.currentUser!;
 
-  static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
 
   static Future<void> getFirebaseMessagingToken() async {
-    await fMessaging.requestPermission();
+    await fmessaging.requestPermission();
 
-    await fMessaging.getToken().then((t) {
-      if (t != null) {
-        me.PushToken = t;
-        log('Push Token:$t');
+    await fmessaging.getToken().then((token) {
+      if (token != null) {
+        me.PushToken = token;
+        log('Token : $token');
       }
     });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  log('Got a message whilst in the foreground!');
+  log('Message data: ${message.data}');
+
+  if (message.notification != null) {
+    log('Message also contained a notification: ${message.notification}');
+  }
+});
+
   }
 
-  static Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
+  static Future<void> sendPushNotification(ChatUser user, String msg) async {
     try {
-      final body = 
-      {
-    "to":chatUser.PushToken,
-    "notification": {
-        "title": chatUser.Name,
-        "body": msg
-    }
+      final body = {
+        "to": user.PushToken,
+        "notification": {
+          "title": user.Name,
+          "body": msg,
+          "android_channel_id": "Chats"
+        },
+        "data": {
+          "Data": "User ID : ${me.Id}",
+        },
+      };
+      var response =
+          await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key = AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
+              },
+              body: jsonEncode(body));
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+    } catch (e) {
+      log('\nsendPushNotificationE : $e');
 
-    };
-
-    var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'), 
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-      'key=AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
-    },
-      body: jsonEncode(body));
-    log('Response status: ${res.statusCode}');
-    log('Response body: ${res.body}');
-    }
-    catch(e){
-      log('\sendPushNotificationE: $e');
     }
   }
 
@@ -71,7 +84,9 @@ class apis {
         me = ChatUser.fromJson(user.data()!);
         await getFirebaseMessagingToken();
         apis.updateActiveStatus(true);
-        log('My Data: ${user.data()}');
+
+        log('My data: ${user.data()}');
+
       } else {
         await createUser().then((value) => getSelfinfo());
       }
@@ -141,7 +156,9 @@ class apis {
     firestore.collection('Users').doc(user.uid).update({
       'Is_online': IsOnline,
       'Last_seen': DateTime.now().millisecondsSinceEpoch.toString(),
-      'push_token': me.PushToken,
+
+      'Push_token': me.PushToken
+
     });
   }
 

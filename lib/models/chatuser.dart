@@ -1,4 +1,3 @@
-
 class ChatUser {
   ChatUser({
     required this.Email,
@@ -20,7 +19,6 @@ class ChatUser {
   late  bool IsOnline;
   late  String Name;
   late  String About;
-
   ChatUser.fromJson(Map<String, dynamic> json){
     Email = json['Email'] ?? '';
     LastSeen = json['Last_seen'] ?? '';
@@ -32,8 +30,6 @@ class ChatUser {
     Name = json['Name'] ?? '';
     About = json['About'] ?? '';
   }
-
-  get name => null;
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
