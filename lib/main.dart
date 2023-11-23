@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:chitchat/screen/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,11 +48,11 @@ _initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   var result = await FlutterNotificationChannel.registerNotificationChannel(
-    description: 'For Showing Message Notification',
-    id: 'chats',
+    description: 'Show message notif',
+    id: 'Chats',
     importance: NotificationImportance.IMPORTANCE_HIGH,
-    name: 'Chats');
-log('\nNotification Channel Result: $result');
+    name: 'Chats',
+  );
+  log('\nNotification channel result : $result');
 }

@@ -1,17 +1,10 @@
-import 'dart:io';
-import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chitchat/api/api.dart';
 import 'package:chitchat/helper/mydateutil.dart';
 import 'package:chitchat/models/chatuser.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:chitchat/main.dart';
-import 'package:chitchat/helper/dialog.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   final ChatUser user;

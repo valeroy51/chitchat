@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:chitchat/api/api.dart';
-import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
