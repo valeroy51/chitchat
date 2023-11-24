@@ -1,22 +1,44 @@
 import 'dart:developer';
+
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/screen/call/call_screen.dart';
+import 'package:chitchat/screen/cobascreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
+import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class homeScreen extends StatefulWidget {
-  const homeScreen({super.key});
+  const homeScreen({Key? key}) : super(key: key);
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
 
 class _homeScreenState extends State<homeScreen> {
+  int _selectedIndex = 1;
+
+  void _navigateBottomBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final List _pages = [
+    //status
+    StatusPage(),
+
+    Cobascreen(),
+
+    CallScreen()
+  ];
+
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
@@ -106,43 +128,67 @@ class _homeScreenState extends State<homeScreen> {
               child: const Icon(Icons.add_comment_rounded),
             ),
           ),
-          body: StreamBuilder(
-            stream: apis.getAllUser(),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                case ConnectionState.none:
-                  return const Center(child: CircularProgressIndicator());
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  final data = snapshot.data?.docs;
-                  _list =
-                      data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+          body: IndexedStack(
+            index: _selectedIndex,
+            children: [
+              StreamBuilder(
+                stream: apis.getAllUser(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(child: CircularProgressIndicator());
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => ChatUser.fromJson(e.data()))
+                              .toList() ??
                           [];
-                  if (_list.isNotEmpty) {
-                    return ListView.builder(
-                        itemCount:
-                            _isSearching ? _searchList.length : _list.length,
-                        // padding: EdgeInsets.only(top: mq.height * .01),
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return chatUserCard(
-                            user: _isSearching
-                                ? _searchList[index]
-                                : _list[index],
-                          );
-                          // return Text('Name : ${list[index]}');
-                        });
-                  } else {
-                    return const Center(
-                        child: Text(
-                      'Terjadi kesalahan, tolong periksa internet anda!',
-                      style: TextStyle(fontSize: 20),
-                    ));
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: _isSearching
+                                ? _searchList.length
+                                : _list.length,
+                            // padding: EdgeInsets.only(top: mq.height * .01),
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return chatUserCard(
+                                user: _isSearching
+                                    ? _searchList[index]
+                                    : _list[index],
+                              );
+                              // return Text('Name : ${list[index]}');
+                            });
+                      } else {
+                        return const Center(
+                            child: Text(
+                          'Terjadi kesalahan, tolong periksa internet anda!',
+                          style: TextStyle(fontSize: 20),
+                        ));
+                      }
                   }
-              }
-            },
+                },
+              ),
+            ],
           ),
+          bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _selectedIndex,
+              onTap: _navigateBottomBar,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: 'Status',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.call),
+                  label: 'call',
+                ),
+              ]),
         ),
       ),
     );
