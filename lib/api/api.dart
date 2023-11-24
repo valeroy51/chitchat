@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +23,6 @@ class apis {
 
   static User get user => auth.currentUser!;
 
-
   static Future<void> getFirebaseMessagingToken() async {
     await fmessaging.requestPermission();
 
@@ -34,14 +34,13 @@ class apis {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  log('Got a message whilst in the foreground!');
-  log('Message data: ${message.data}');
+      log('Got a message whilst in the foreground!');
+      log('Message data: ${message.data}');
 
-  if (message.notification != null) {
-    log('Message also contained a notification: ${message.notification}');
-  }
-});
-
+      if (message.notification != null) {
+        log('Message also contained a notification: ${message.notification}');
+      }
+    });
   }
 
   static Future<void> sendPushNotification(ChatUser user, String msg) async {
@@ -69,7 +68,6 @@ class apis {
       log('Response body: ${response.body}');
     } catch (e) {
       log('\nsendPushNotificationE : $e');
-
     }
   }
 
@@ -85,7 +83,6 @@ class apis {
         apis.updateActiveStatus(true);
 
         log('My data: ${user.data()}');
-
       } else {
         await createUser().then((value) => getSelfinfo());
       }
@@ -155,9 +152,7 @@ class apis {
     firestore.collection('Users').doc(user.uid).update({
       'Is_online': IsOnline,
       'Last_seen': DateTime.now().millisecondsSinceEpoch.toString(),
-
       'Push_token': me.PushToken
-
     });
   }
 
@@ -221,5 +216,16 @@ class apis {
 
     final imageUrl = await ref.getDownloadURL();
     await sendMessage(chatUser, imageUrl, Type.image);
+  }
+
+  static Future<void> deleteMessage(Messages messages) async {
+    await firestore
+        .collection('Chats/${getConversationID(messages.told)}/Messages/')
+        .doc(messages.sent)
+        .delete();
+
+    if (messages.type == Type.image) {
+      await storage.refFromURL(messages.msg).delete();
+    }
   }
 }
