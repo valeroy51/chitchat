@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class MyDateUtil {
   static String getFormattedTime(
@@ -8,8 +7,27 @@ class MyDateUtil {
     return TimeOfDay.fromDateTime(date).format(context);
   }
 
+  static String getMessageTime(
+      {required BuildContext context, required String time}) {
+    final DateTime sent = DateTime.fromMicrosecondsSinceEpoch(int.parse(time));
+    final DateTime now = DateTime.now();
+
+    final formattedTime = TimeOfDay.fromDateTime(sent).format(context);
+    if (now.day == sent.day &&
+        now.month == sent.month &&
+        now.year == sent.year) {
+      return formattedTime;
+    }
+
+    return now.year == sent.year
+        ? '$formattedTime - ${sent.day} ${_getMonth(sent)}'
+        : '$formattedTime - ${sent.day} ${_getMonth(sent)} ${sent.year}';
+  }
+
   static String getLastMessageTime(
-      {required BuildContext context, required String time, bool showYear = false}) {
+      {required BuildContext context,
+      required String time,
+      bool showYear = false}) {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
 
@@ -19,10 +37,10 @@ class MyDateUtil {
       return TimeOfDay.fromDateTime(sent).format(context);
     }
 
-    return showYear 
-      ? '${sent.day} ${_getMonth(sent)} ${sent.year}' 
-      : '${sent.day} ${_getMonth(sent)}';
-    }
+    return showYear
+        ? '${sent.day} ${_getMonth(sent)} ${sent.year}'
+        : '${sent.day} ${_getMonth(sent)}';
+  }
 
   String getLastActiveTime(
       {required BuildContext context, required String lastActive}) {
@@ -39,8 +57,8 @@ class MyDateUtil {
         time.year == now.year) {
       return 'Last seen yesterday at $formattedTime';
     }
-  
-    if((now.difference(time).inHours / 24).round() == 1) {
+
+    if ((now.difference(time).inHours / 24).round() == 1) {
       return 'Last seen yesterday at $formattedTime';
     }
 
