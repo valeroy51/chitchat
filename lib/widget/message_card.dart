@@ -174,7 +174,23 @@ class _MessageCardState extends State<MessageCard> {
                         size: 26,
                       ),
                       name: 'Save Image',
-                      onTap: () {}),
+                      onTap: () async {
+                        try{
+                           log('Image Url: ${widget.message.msg}');
+                       await GallerySaver.saveImage(widget.message.msg,
+                       albumName: 'ChitChat')
+                       .then((success) {
+                      Navigator.pop(context);
+                        if(success != null && success){
+                          dialog.showSnackBar(
+                            context, "Image Successfully Saved!");
+                        }
+                        });
+                        }
+                        catch(e){
+                          log('ErrorWhileSavingImg: $e');
+                        }
+                      }),
               if (isMe)
                 Divider(
                   color: Colors.black54,
