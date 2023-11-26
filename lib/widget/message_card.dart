@@ -165,7 +165,7 @@ class _MessageCardState extends State<MessageCard> {
                             .then((value) {
                           Navigator.pop(context);
 
-                          dialog.showSnackBar(context, "text copied");
+                          dialog.showSnackBar(context, "Text Copied");
                         });
                       })
                   : _OptionItem(
@@ -206,7 +206,11 @@ class _MessageCardState extends State<MessageCard> {
                       size: 26,
                     ),
                     name: 'Edit Message',
-                    onTap: () {}),
+                    onTap: () {
+                      Navigator.pop(context);
+
+                      _showMessageUpdateDialog ();
+                    }),
               if (isMe)
                 _OptionItem(
                     icon: Icon(
@@ -245,6 +249,33 @@ class _MessageCardState extends State<MessageCard> {
             ],
           );
         });
+  }
+  
+  void _showMessageUpdateDialog() {
+    String updateMsg = widget.message.msg;
+
+    showDialog(context: context, builder: (_) => AlertDialog(
+      contentPadding: EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Row(children: const [Icon(Icons.message, color:Colors.blue, size: 28), Text('Edit Message')]),
+
+      content: TextFormField(
+        initialValue: updateMsg,
+        maxLines:null,
+        onChanged: (value) => updateMsg = value,
+        decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),),
+    
+      actions: [
+        MaterialButton(onPressed: (){
+          Navigator.pop(context);
+        }, child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 16),),),
+
+        MaterialButton(onPressed: (){
+          Navigator.pop(context);
+          apis.updateMessage(widget.message, updateMsg);
+        }, child: const Text('Edit', style: TextStyle(color: Colors.blue, fontSize: 16),),)
+      ],
+    ));
   }
 }
 
