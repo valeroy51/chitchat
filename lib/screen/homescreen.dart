@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:chitchat/api/api.dart';
+import 'package:chitchat/helper/dialog.dart';
 import 'package:chitchat/models/chatuser.dart';
-import 'package:chitchat/screen/call/call_screen.dart';
-import 'package:chitchat/screen/cobascreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
@@ -18,7 +17,7 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   void _navigateBottomBar(int index) {
     setState(() {
@@ -28,11 +27,9 @@ class _homeScreenState extends State<homeScreen> {
 
   final List _pages = [
     //status
-    StatusPage(),
+    homeScreen(),
 
-    Cobascreen(),
-
-    CallScreen()
+    StatusPage()
   ];
 
   List<ChatUser> _list = [];
@@ -124,7 +121,9 @@ class _homeScreenState extends State<homeScreen> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                _addChatUserDialog();
+              },
               child: const Icon(Icons.add_comment_rounded),
             ),
           ),
@@ -184,13 +183,64 @@ class _homeScreenState extends State<homeScreen> {
                   icon: Icon(Icons.notifications),
                   label: 'Status',
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.call),
-                  label: 'call',
-                ),
               ]),
         ),
       ),
     );
+  }
+
+  void _addChatUserDialog() {
+    String Email = '';
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              contentPadding:
+                  EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Row(children: const [
+                Icon(Icons.person_add, color: Colors.blue, size: 28),
+                Text('  Add User')
+              ]),
+              content: TextFormField(
+                maxLines: null,
+                onChanged: (value) => Email = value,
+                decoration: InputDecoration(
+                    hintText: 'Email Id',
+                    prefixIcon: const Icon(
+                      Icons.email,
+                      color: Colors.blue,
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15))),
+              ),
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    if (Email.isNotEmpty)
+                      apis.addChatUser(Email).then((value) {
+                        if (!value) {
+                          dialog.showSnackBar(context, 'User does not Exists!');
+                        }
+                      });
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                )
+              ],
+            ));
   }
 }

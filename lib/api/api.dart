@@ -75,6 +75,30 @@ class apis {
     return (await firestore.collection('Users').doc(user.uid).get()).exists;
   }
 
+  static Future<bool> addChatUser(String email) async {
+    final data = await firestore
+        .collection('Users')
+        .where('Email', isEqualTo: email)
+        .get();
+
+    log('Data: ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      log('user exists: ${data.docs.first.data()}');
+
+      firestore
+          .collection('Users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<void> getSelfinfo() async {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
       if (user.exists) {
@@ -234,5 +258,5 @@ class apis {
         .collection('Chats/${getConversationID(messages.told)}/Messages/')
         .doc(messages.sent)
         .update({'msg': updateMsg});
-    }
+  }
 }
