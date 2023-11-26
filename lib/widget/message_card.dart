@@ -7,6 +7,7 @@ import 'package:chitchat/helper/mydateutil.dart';
 import 'package:chitchat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 import '../models/Message.dart';
 
