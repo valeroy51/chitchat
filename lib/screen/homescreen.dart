@@ -129,9 +129,20 @@ class _homeScreenState extends State<homeScreen> {
           ),
           body: IndexedStack(
             index: _selectedIndex,
-            children: [
-              StreamBuilder(
-                stream: apis.getAllUser(),
+            children: [StreamBuilder(
+              stream: apis.getMyUsersId(),
+              builder: (context, snapshot){
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(child: CircularProgressIndicator());
+                    case ConnectionState.active:
+                    case ConnectionState.done:                  
+                    
+                    
+                    return StreamBuilder(
+                stream: apis.getAllUser(
+                  snapshot.data?.docs.map((e) => e.id).toList() ??[]),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -168,7 +179,10 @@ class _homeScreenState extends State<homeScreen> {
                       }
                   }
                 },
-              ),
+              );
+                }
+                return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                },),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
