@@ -9,7 +9,7 @@ class MyDateUtil {
 
   static String getMessageTime(
       {required BuildContext context, required String time}) {
-    final DateTime sent = DateTime.fromMicrosecondsSinceEpoch(int.parse(time));
+    final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
 
     final formattedTime = TimeOfDay.fromDateTime(sent).format(context);
@@ -43,8 +43,8 @@ class MyDateUtil {
   }
 
   String getLastActiveTime(
-      {required BuildContext context, required String lastActive}) {
-    final int i = int.tryParse(lastActive) ?? -1;
+      {required BuildContext context, required String LastSeen}) {
+    final int i = int.tryParse(LastSeen) ?? -1;
 
     if (i == -1) return 'Last seen not available';
 

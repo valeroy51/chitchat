@@ -178,11 +178,11 @@ class _chatScreenState extends State<chatScreen> {
                         ? 'Online'
                         : MyDateUtil().getLastActiveTime(
                           context: context, 
-                          lastActive: list[0].LastSeen)
+                          LastSeen: list[0].LastSeen)
                       : MyDateUtil().getLastActiveTime(
                         context: context, 
-                        lastActive: widget.user.LastSeen),
-                  style:  TextStyle(fontSize: 13, color: Colors.white70)),
+                        LastSeen: widget.user.LastSeen),
+                  style:  const TextStyle(fontSize: 13, color: Colors.white70)),
             ],
           )
         ],
