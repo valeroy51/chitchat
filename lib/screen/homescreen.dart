@@ -181,7 +181,6 @@ class _homeScreenState extends State<homeScreen> {
                 },
               );
                 }
-                return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                 },),
             ],
           ),
