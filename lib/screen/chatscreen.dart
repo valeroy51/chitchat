@@ -274,7 +274,6 @@ class _chatScreenState extends State<chatScreen> {
                   apis.sendMessage(
                     widget.user, _textController.text,Type.text);
                 }
-                apis.sendMessage(widget.user, _textController.text, Type.text);
                 _textController.text = '';
               }
             },

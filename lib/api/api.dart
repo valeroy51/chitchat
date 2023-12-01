@@ -177,7 +177,7 @@ class apis {
 
     return firestore
         .collection('Users')
-        .where('id',
+        .where('Id',
             whereIn: userIds.isEmpty
                 ? ['']
                 : userIds) //because empty list throws an error
