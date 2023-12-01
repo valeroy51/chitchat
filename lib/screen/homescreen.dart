@@ -39,7 +39,7 @@ class _homeScreenState extends State<homeScreen> {
   @override
   void initState() {
     super.initState();
-    apis.getSelfinfo();
+    apis.getSelfInfo();
 
     SystemChannels.lifecycle.setMessageHandler((message) {
       log('Messages: $message');
@@ -141,7 +141,7 @@ class _homeScreenState extends State<homeScreen> {
                     
                     
                     return StreamBuilder(
-                stream: apis.getAllUser(
+                stream: apis.getAllUsers(
                   snapshot.data?.docs.map((e) => e.id).toList() ??[]),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
@@ -181,7 +181,6 @@ class _homeScreenState extends State<homeScreen> {
                 },
               );
                 }
-                return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                 },),
             ],
           ),
