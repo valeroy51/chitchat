@@ -1,14 +1,18 @@
 import 'dart:developer';
 import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/dialog.dart';
 import '../api/api.dart';
 import '../main.dart';
+import 'package:chitchat/screen/NoteScreen.dart';
+import 'package:chitchat/screen/status/StatusPage.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
@@ -62,7 +66,17 @@ class _homeScreenState extends State<homeScreen> {
           appBar: AppBar(
             systemOverlayStyle:
                 const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
-            leading: const Icon(CupertinoIcons.home),
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => NoteScreen(user: apis.me),
+                  ),
+                );
+              },
+              child: const Icon(CupertinoIcons.bookmark),
+            ),
             title: _isSearching
                 ? TextField(
                     decoration: const InputDecoration(
@@ -178,16 +192,25 @@ class _homeScreenState extends State<homeScreen> {
             onTap: (Index) {
               if (_index == Index) {
                 if (Index == 0) {
+                } else if (Index == 1) {}
                 
                 } else if (Index == 1) {
                 
                 }
+
               } else {
                 setState(() {
                   _index = Index;
                   if (Index == 1) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const StatusPage())); //ganti yang ini
+
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (_) => const StatusPage())); //ganti yang ini
+
                   }
                   if (Index == 0) {
                     Navigator.pushReplacement(context,

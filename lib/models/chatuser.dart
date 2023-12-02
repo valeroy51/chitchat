@@ -30,6 +30,7 @@ class ChatUser {
     IsOnline = json['Is_online'] ?? '';
     Name = json['Name'] ?? '';
     About = json['About'] ?? '';
+    
   }
 
   Map<String, dynamic> toJson() {
