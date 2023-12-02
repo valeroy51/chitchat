@@ -1,12 +1,15 @@
 import 'dart:developer';
+
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
+import 'package:chitchat/screen/status/StatusWidget.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../helper/dialog.dart';
+
 import '../api/api.dart';
+import '../helper/dialog.dart';
 import '../main.dart';
 
 class homeScreen extends StatefulWidget {
@@ -99,7 +102,15 @@ class _homeScreenState extends State<homeScreen> {
                         MaterialPageRoute(
                             builder: (_) => ProfileScreen(user: apis.me)));
                   },
-                  icon: const Icon(Icons.more_vert))
+                  icon: const Icon(Icons.more_vert)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const StatusWidget()));
+                  },
+                  icon: const Icon(Icons.notifications)),
             ],
           ),
           floatingActionButton: Padding(
