@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/screen/profilescreen.dart';
+import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -192,6 +193,11 @@ class _homeScreenState extends State<homeScreen> {
               if (_index == Index) {
                 if (Index == 0) {
                 } else if (Index == 1) {}
+                
+                } else if (Index == 1) {
+                
+                }
+
               } else {
                 setState(() {
                   _index = Index;
@@ -201,6 +207,10 @@ class _homeScreenState extends State<homeScreen> {
                         MaterialPageRoute(
                             builder: (_) =>
                                 const StatusPage())); //ganti yang ini
+
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const StatusPage())); //ganti yang ini
+
                   }
                   if (Index == 0) {
                     Navigator.pushReplacement(context,
