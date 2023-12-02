@@ -37,21 +37,21 @@ class _StatusPageState extends State<StatusPage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 13,
           ),
           FloatingActionButton(
             onPressed: () {},
             backgroundColor: Colors.greenAccent[700],
             elevation: 5,
-            child: Icon(Icons.camera_alt),
+            child: const Icon(Icons.camera_alt),
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            HeadOwnStatus(),
+            const HeadOwnStatus(),
             label("Recent updates"),
             GestureDetector(
               onTap: () => Navigator.push(
@@ -72,10 +72,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "Kaya",
                 imageName: "img/kaya.jpg",
                 time: "04:47",
@@ -87,10 +87,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "berta",
                 imageName: "img/berta.jpg",
                 time: "05:23",
@@ -98,7 +98,7 @@ class _StatusPageState extends State<StatusPage> {
                 statusNum: 3,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             label("Viewed updates"),
@@ -106,10 +106,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "Margot",
                 imageName: "img/margot.jpg",
                 time: "01:27",
@@ -121,10 +121,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "Kaya",
                 imageName: "img/kaya.jpg",
                 time: "04:47",
@@ -136,10 +136,10 @@ class _StatusPageState extends State<StatusPage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StoryPageView(),
+                  builder: (context) => const StoryPageView(),
                 ),
               ),
-              child: OtherStatus(
+              child: const OtherStatus(
                 name: "berta",
                 imageName: "img/berta.jpg",
                 time: "05:23",
@@ -162,7 +162,7 @@ class _StatusPageState extends State<StatusPage> {
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
         child: Text(
           labelname,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
           ),
