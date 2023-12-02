@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
+import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _homeScreenState extends State<homeScreen> {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
+  int _index = 0;
 
   @override
   void initState() {
@@ -140,7 +142,7 @@ class _homeScreenState extends State<homeScreen> {
                                 itemCount: _isSearching
                                     ? _searchList.length
                                     : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
+                                padding: EdgeInsets.only(top: mq.height * .001),
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return chatUserCard(
@@ -157,6 +159,41 @@ class _homeScreenState extends State<homeScreen> {
                       }
                     },
                   );
+              }
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _index,
+            type: BottomNavigationBarType.shifting,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.home),
+                  label: 'Home',
+                  backgroundColor: Colors.indigo),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.bell),
+                  label: 'Status',
+                  backgroundColor: Colors.indigo)
+            ],
+            onTap: (Index) {
+              if (_index == Index) {
+                if (Index == 0) {
+                
+                } else if (Index == 1) {
+                
+                }
+              } else {
+                setState(() {
+                  _index = Index;
+                  if (Index == 1) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const StatusPage())); //ganti yang ini
+                  }
+                  if (Index == 0) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const homeScreen()));
+                  }
+                });
               }
             },
           ),
