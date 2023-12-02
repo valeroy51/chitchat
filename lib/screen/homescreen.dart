@@ -1,13 +1,16 @@
 import 'dart:developer';
 import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/dialog.dart';
 import '../api/api.dart';
 import '../main.dart';
+import 'package:chitchat/screen/NoteScreen.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
@@ -20,6 +23,8 @@ class _homeScreenState extends State<homeScreen> {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
+  String groupName = "";
+  String userName = "";
 
   @override
   void initState() {
@@ -60,7 +65,18 @@ class _homeScreenState extends State<homeScreen> {
           appBar: AppBar(
             systemOverlayStyle:
                 const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
-            leading: const Icon(CupertinoIcons.home),
+           leading: GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NoteScreen(user: apis.me),
+      ),
+    );
+  },
+  child: const Icon(CupertinoIcons.bookmark),
+),
+
             title: _isSearching
                 ? TextField(
                     decoration: const InputDecoration(
@@ -220,4 +236,6 @@ class _homeScreenState extends State<homeScreen> {
               ],
             ));
   }
+
+
 }

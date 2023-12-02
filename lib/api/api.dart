@@ -12,6 +12,9 @@ import '../models/chatuser.dart';
 import '../models/Message.dart';
 
 class apis {
+final String? uid;
+  apis({this.uid});
+
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
@@ -36,6 +39,7 @@ class apis {
         log('Push Token: $token');
       }
     });
+
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log('Got a message whilst in the foreground!');
@@ -116,6 +120,7 @@ class apis {
       }
     });
   }
+
 
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -286,4 +291,6 @@ class apis {
         .doc(messages.sent)
         .update({'msg': updateMsg});
   }
+
+
 }
