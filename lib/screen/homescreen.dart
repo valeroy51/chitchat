@@ -1,37 +1,22 @@
 import 'dart:developer';
-
-import 'package:chitchat/api/api.dart';
-import 'package:chitchat/helper/dialog.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/profilescreen.dart';
-import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../helper/dialog.dart';
+import '../api/api.dart';
+import '../main.dart';
 
 class homeScreen extends StatefulWidget {
-  const homeScreen({Key? key}) : super(key: key);
+  const homeScreen({super.key});
+
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
 
 class _homeScreenState extends State<homeScreen> {
-  int _selectedIndex = 0;
-
-  void _navigateBottomBar(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  final List _pages = [
-    //status
-    homeScreen(),
-
-    StatusPage()
-  ];
-
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
@@ -40,9 +25,9 @@ class _homeScreenState extends State<homeScreen> {
   void initState() {
     super.initState();
     apis.getSelfInfo();
-
     SystemChannels.lifecycle.setMessageHandler((message) {
-      log('Messages: $message');
+      log('Message: $message');
+
       if (apis.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
           apis.updateActiveStatus(true);
@@ -73,6 +58,8 @@ class _homeScreenState extends State<homeScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+            systemOverlayStyle:
+                const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
             leading: const Icon(CupertinoIcons.home),
             title: _isSearching
                 ? TextField(
@@ -82,14 +69,15 @@ class _homeScreenState extends State<homeScreen> {
                     style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
                     onChanged: (val) {
                       _searchList.clear();
+
                       for (var i in _list) {
                         if (i.Name.toLowerCase().contains(val.toLowerCase()) ||
                             i.Email.toLowerCase().contains(val.toLowerCase())) {
                           _searchList.add(i);
+                          setState(() {
+                            _searchList;
+                          });
                         }
-                        setState(() {
-                          _searchList;
-                        });
                       }
                     },
                   )
@@ -109,150 +97,126 @@ class _homeScreenState extends State<homeScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => ProfileScreen(
-                                  user: apis.me,
-                                )));
+                            builder: (_) => ProfileScreen(user: apis.me)));
                   },
                   icon: const Icon(Icons.more_vert))
             ],
-            systemOverlayStyle:
-                const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
           ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
-              onPressed: () {
-                _addChatUserDialog();
-              },
-              child: const Icon(Icons.add_comment_rounded),
-            ),
-          ),
-          body: IndexedStack(
-            index: _selectedIndex,
-            children: [StreamBuilder(
-              stream: apis.getMyUsersId(),
-              builder: (context, snapshot){
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return const Center(child: CircularProgressIndicator());
-                    case ConnectionState.active:
-                    case ConnectionState.done:                  
-                    
-                    
-                    return StreamBuilder(
-                stream: apis.getAllUsers(
-                  snapshot.data?.docs.map((e) => e.id).toList() ??[]),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return const Center(child: CircularProgressIndicator());
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      final data = snapshot.data?.docs;
-                      _list = data
-                              ?.map((e) => ChatUser.fromJson(e.data()))
-                              .toList() ??
-                          [];
-                      if (_list.isNotEmpty) {
-                        return ListView.builder(
-                            itemCount: _isSearching
-                                ? _searchList.length
-                                : _list.length,
-                            // padding: EdgeInsets.only(top: mq.height * .01),
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return chatUserCard(
-                                user: _isSearching
-                                    ? _searchList[index]
-                                    : _list[index],
-                              );
-                              // return Text('Name : ${list[index]}');
-                            });
-                      } else {
-                        return const Center(
-                            child: Text(
-                          'Terjadi kesalahan, tolong periksa internet anda!',
-                          style: TextStyle(fontSize: 20),
-                        ));
-                      }
-                  }
+                onPressed: () {
+                  _addChatUserDialog();
                 },
-              );
-                }
-                },),
-            ],
+                child: const Icon(Icons.add_comment_rounded)),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: _navigateBottomBar,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Status',
-                ),
-              ]),
+          body: StreamBuilder(
+            stream: apis.getMyUsersId(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return const Center(child: CircularProgressIndicator());
+
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  return StreamBuilder(
+                    stream: apis.getAllUsers(
+                        snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          _list = data
+                                  ?.map((e) => ChatUser.fromJson(e.data()))
+                                  .toList() ??
+                              [];
+
+                          if (_list.isNotEmpty) {
+                            return ListView.builder(
+                                itemCount: _isSearching
+                                    ? _searchList.length
+                                    : _list.length,
+                                padding: EdgeInsets.only(top: mq.height * .01),
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return chatUserCard(
+                                      user: _isSearching
+                                          ? _searchList[index]
+                                          : _list[index]);
+                                });
+                          } else {
+                            return const Center(
+                              child: Text('Invite teman dengan akun Gmail!',
+                                  style: TextStyle(fontSize: 20)),
+                            );
+                          }
+                      }
+                    },
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
   }
 
   void _addChatUserDialog() {
-    String Email = '';
+    String email = '';
 
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              contentPadding:
-                  EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+              contentPadding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 20, bottom: 10),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              title: Row(children: const [
-                Icon(Icons.person_add, color: Colors.blue, size: 28),
-                Text('  Add User')
-              ]),
+              title: const Row(
+                children: [
+                  Icon(
+                    Icons.person_add,
+                    color: Colors.blue,
+                    size: 28,
+                  ),
+                  Text('  Add User')
+                ],
+              ),
               content: TextFormField(
                 maxLines: null,
-                onChanged: (value) => Email = value,
+                onChanged: (value) => email = value,
                 decoration: InputDecoration(
                     hintText: 'Email Id',
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Colors.blue,
-                    ),
+                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
               actions: [
                 MaterialButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
-                  ),
-                ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.blue, fontSize: 16))),
                 MaterialButton(
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    if (Email.isNotEmpty)
-                      apis.addChatUser(Email).then((value) {
-                        if (!value) {
-                          dialog.showSnackBar(context, 'User does not Exists!');
-                        }
-                      });
-                  },
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
-                  ),
-                )
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      if (email.isNotEmpty) {
+                        await apis.addChatUser(email).then((value) {
+                          if (!value) {
+                            dialog.showSnackBar(
+                                context, 'User does not Exists!');
+                          }
+                        });
+                      }
+                    },
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    ))
               ],
             ));
   }

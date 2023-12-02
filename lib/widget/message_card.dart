@@ -200,7 +200,7 @@ class _MessageCardState extends State<MessageCard> {
                 ),
               if (widget.message.type == Type.text && isMe)
                 _OptionItem(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       color: Colors.blue,
                       size: 26,
@@ -213,7 +213,7 @@ class _MessageCardState extends State<MessageCard> {
                     }),
               if (isMe)
                 _OptionItem(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete_forever,
                       color: Colors.red,
                       size: 26,
@@ -255,9 +255,9 @@ class _MessageCardState extends State<MessageCard> {
     String updateMsg = widget.message.msg;
 
     showDialog(context: context, builder: (_) => AlertDialog(
-      contentPadding: EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+      contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Row(children: const [Icon(Icons.message, color:Colors.blue, size: 28), Text('Edit Message')]),
+      title: const Row(children: [Icon(Icons.message, color:Colors.blue, size: 28), Text('Edit Message')]),
 
       content: TextFormField(
         initialValue: updateMsg,
@@ -301,7 +301,7 @@ class _OptionItem extends StatelessWidget {
             Flexible(
                 child: Text(
               '   $name',
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 15, color: Colors.black54, letterSpacing: .05),
             ))
           ]),

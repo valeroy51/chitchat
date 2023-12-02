@@ -61,7 +61,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   height: mq.height * .2,
                   fit: BoxFit.fill,
                   imageUrl: widget.user.Image,
-                  // placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
                       const CircleAvatar(
                           child: Icon(CupertinoIcons.person))),
