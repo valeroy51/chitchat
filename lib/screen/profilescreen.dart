@@ -81,7 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: mq.height * .2,
                                 height: mq.height * .2,
                                 fit: BoxFit.cover,
-                                // placeholder: (context, url) => CircularProgressIndicator(),
                               ))
                           : ClipRRect(
                               borderRadius:
@@ -91,7 +90,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: mq.height * .2,
                                   fit: BoxFit.fill,
                                   imageUrl: widget.user.Image,
-                                  // placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
                                       const CircleAvatar(
                                           child: Icon(CupertinoIcons.person))),
@@ -213,14 +211,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
-                        final List<XFile>? Images = 
-                          await picker.pickMultiImage(imageQuality: 80);
-                          
-                        for (var i in Images!){
+                        final List<XFile>? Images =
+                            await picker.pickMultiImage(imageQuality: 80);
+
+                        for (var i in Images!) {
                           log('Images Path: ${i.path}');
-                          await apis.sendChatImage(
-                            widget.user, File(i.path));
-                        }    
+                          await apis.sendChatImage(widget.user, File(i.path));
+                        }
                       },
                       child: Image.asset("img/camera.png")),
                 ],

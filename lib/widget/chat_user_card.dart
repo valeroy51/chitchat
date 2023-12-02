@@ -43,8 +43,6 @@ class _chatUserCardState extends State<chatUserCard> {
                   _message = list[0];
                 }
                 return ListTile(
-                  // leading: const CircleAvatar child: Icon(CupertinoIcons.person),
-// ),
                   leading: InkWell(
                     onTap: () {
                       showDialog(
@@ -57,7 +55,6 @@ class _chatUserCardState extends State<chatUserCard> {
                           width: mq.height * .055,
                           height: mq.height * .055,
                           imageUrl: widget.user.Image,
-                          // placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) =>
                               const CircleAvatar(
                                   child: Icon(CupertinoIcons.person))),

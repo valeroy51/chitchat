@@ -29,7 +29,6 @@ class ProfileDialog extends StatelessWidget {
                   width: mq.width * .5,
                   fit: BoxFit.cover,
                   imageUrl: user.Image,
-                  // placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
                       const CircleAvatar(child: Icon(CupertinoIcons.person))),
             ),
