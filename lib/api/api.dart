@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-
 import '../models/chatuser.dart';
 import '../models/Message.dart';
 
 class apis {
-final String? uid;
+  final String? uid;
   apis({this.uid});
 
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -40,7 +38,6 @@ final String? uid;
       }
     });
 
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log('Got a message whilst in the foreground!');
       log('Message data: ${message.data}');
@@ -56,7 +53,7 @@ final String? uid;
       final body = {
         "to": user.PushToken,
         "notification": {
-          "title": user.Name,
+          "title": me.Name,
           "body": msg,
           "android_channel_id": "Chats"
         },
@@ -120,7 +117,6 @@ final String? uid;
       }
     });
   }
-
 
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -291,6 +287,4 @@ final String? uid;
         .doc(messages.sent)
         .update({'msg': updateMsg});
   }
-
-
 }

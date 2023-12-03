@@ -9,7 +9,6 @@ import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../api/api.dart';
 
 import '../helper/dialog.dart';
@@ -194,9 +193,6 @@ class _homeScreenState extends State<homeScreen> {
 
             onTap: (Index) {
               if (_index == Index) {
-                if (Index == 0) {
-                } else if (Index == 1) {}
-
               } else {
                 setState(() {
                   _index = index;
@@ -205,14 +201,7 @@ class _homeScreenState extends State<homeScreen> {
 
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>
-                                const StatusWidget())); //ganti yang ini
-
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                const StatusWidget())); //ganti yang ini
+                            builder: (_) => const StatusWidget()));
                   }
                   if (Index == 0) {
                     Navigator.pushReplacement(context,

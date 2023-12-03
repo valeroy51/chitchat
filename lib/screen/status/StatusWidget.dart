@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/homescreen.dart';
@@ -38,7 +36,7 @@ class _StatusWidgetState extends State<StatusWidget> {
           },
           child: const Icon(CupertinoIcons.bookmark),
         ),
-        title: Text("View Status"),
+        title: const Text("View Status"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -47,28 +45,28 @@ class _StatusWidgetState extends State<StatusWidget> {
             Container(
               child: Row(children: [
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 12),
+                  margin: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
                     child: Image.asset(
-                      "img/logo12.png",
+                      "img/roy.png",
                       height: 55,
                       width: 55,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Chitchat",
+                        "Valeroy Putra Sientika",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -76,7 +74,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                         height: 8.0,
                       ),
                       Text(
-                        "Have a great day",
+                        "pengen tidur 10 jam",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -85,7 +83,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                     ],
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
                     onPressed: () {
                       Navigator.push(
@@ -109,23 +107,23 @@ class _StatusWidgetState extends State<StatusWidget> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StoryPageView())),
+                            builder: (context) => const StoryPageView())),
                     child: Container(
-                      padding: EdgeInsets.all(1.5),
+                      padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40),
                           border: Border.all(color: Colors.blue, width: 3)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40),
                         child: Image.asset(
-                          "img/roy.png",
+                          "img/hans.png",
                           height: 55,
                           width: 55,
                           fit: BoxFit.cover,
@@ -133,13 +131,13 @@ class _StatusWidgetState extends State<StatusWidget> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Connie",
+                            "Hans Nathanael",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -171,23 +169,23 @@ class _StatusWidgetState extends State<StatusWidget> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StoryPageViewed())),
+                            builder: (context) => const StoryPageViewed())),
                     child: Container(
-                      padding: EdgeInsets.all(1.5),
+                      padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40),
                           border: Border.all(color: Colors.grey, width: 3)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40),
                         child: Image.asset(
-                          "img/benaya.png",
+                          "img/anto.png",
                           height: 55,
                           width: 55,
                           fit: BoxFit.cover,
@@ -195,13 +193,13 @@ class _StatusWidgetState extends State<StatusWidget> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Benaya",
+                            "Yang Mulia Anthony",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -246,15 +244,11 @@ class _StatusWidgetState extends State<StatusWidget> {
             setState(() {
               _index = Index;
               if (Index == 1) {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const StatusWidget())); //ganti yang ini
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const StatusWidget()));
 
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const StatusWidget())); //ganti yang ini
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const StatusWidget()));
               }
               if (Index == 0) {
                 Navigator.pushReplacement(context,

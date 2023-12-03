@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppStyle {
-  static Color bgColor = Color(0xFFe2e2ff);
-  static Color mainColor = Color.fromARGB(255, 13, 20, 79);
-  static Color accentColor = Color(0xFF0065FF);
+  static Color bgColor = const Color(0xFFe2e2ff);
+  static Color mainColor = const Color.fromARGB(255, 13, 20, 79);
+  static Color accentColor = const Color(0xFF0065FF);
 
   static List<Color> cardsColor = [
     Colors.white,
@@ -18,7 +17,12 @@ class AppStyle {
   ];
 
   // Static text styles
-  static TextStyle mainTitle = TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic ,fontWeight: FontWeight.bold);
-  static TextStyle mainContent = TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic, fontWeight:FontWeight.normal );
-  static TextStyle dateTitle = TextStyle(fontSize: 13.0, fontStyle: FontStyle.italic, fontWeight:FontWeight.w500 );
+  static TextStyle mainTitle = const TextStyle(
+      fontSize: 18.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold);
+  static TextStyle mainContent = const TextStyle(
+      fontSize: 16.0,
+      fontStyle: FontStyle.italic,
+      fontWeight: FontWeight.normal);
+  static TextStyle dateTitle = const TextStyle(
+      fontSize: 13.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500);
 }
