@@ -195,8 +195,8 @@ class _homeScreenState extends State<homeScreen> {
               if (_index == Index) {
               } else {
                 setState(() {
-                  _index = index;
-                  if (index == 1) {
+                  _index = Index;
+                  if (Index == 1) {
                     Navigator.pushReplacement(
 
                         context,
