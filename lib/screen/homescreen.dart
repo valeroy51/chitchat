@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chitchat/models/chatuser.dart';
+import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StatusWidget.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
@@ -23,6 +24,7 @@ class _homeScreenState extends State<homeScreen> {
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
+  int _index = 0;
 
   @override
   void initState() {
@@ -63,7 +65,17 @@ class _homeScreenState extends State<homeScreen> {
           appBar: AppBar(
             systemOverlayStyle:
                 const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
-            leading: const Icon(CupertinoIcons.home),
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => NoteScreen(user: apis.me),
+                  ),
+                );
+              },
+              child: const Icon(CupertinoIcons.bookmark),
+            ),
             title: _isSearching
                 ? TextField(
                     decoration: const InputDecoration(
@@ -103,14 +115,6 @@ class _homeScreenState extends State<homeScreen> {
                             builder: (_) => ProfileScreen(user: apis.me)));
                   },
                   icon: const Icon(Icons.more_vert)),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const StatusWidget()));
-                  },
-                  icon: const Icon(Icons.notifications)),
             ],
           ),
           floatingActionButton: Padding(
@@ -151,7 +155,7 @@ class _homeScreenState extends State<homeScreen> {
                                 itemCount: _isSearching
                                     ? _searchList.length
                                     : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
+                                padding: EdgeInsets.only(top: mq.height * .001),
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return chatUserCard(
@@ -168,6 +172,47 @@ class _homeScreenState extends State<homeScreen> {
                       }
                     },
                   );
+              }
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _index,
+            type: BottomNavigationBarType.shifting,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.home),
+                  label: 'Home',
+                  backgroundColor: Colors.indigo),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.bell),
+                  label: 'Status',
+                  backgroundColor: Colors.indigo)
+            ],
+            onTap: (Index) {
+              if (_index == Index) {
+                if (Index == 0) {
+                } else if (Index == 1) {}
+              } else {
+                setState(() {
+                  _index = Index;
+                  if (Index == 1) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const StatusWidget())); //ganti yang ini
+
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const StatusWidget())); //ganti yang ini
+                  }
+                  if (Index == 0) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const homeScreen()));
+                  }
+                });
               }
             },
           ),
