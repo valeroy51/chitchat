@@ -53,7 +53,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
                     child: Image.asset(
-                      "img/roy.png",
+                      "img/logo12.png",
                       height: 55,
                       width: 55,
                       fit: BoxFit.cover,
@@ -66,7 +66,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Valeroy Putra Sientika",
+                        "ChitChat",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -74,7 +74,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                         height: 8.0,
                       ),
                       Text(
-                        "pengen tidur 10 jam",
+                        "FROM US TO YOU",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
