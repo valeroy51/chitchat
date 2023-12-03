@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../main.dart';
-import 'package:video_player/video_player.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
@@ -18,21 +17,14 @@ class loginScreen extends StatefulWidget {
 
 class _loginScreenState extends State<loginScreen> {
   bool _isAnimated = false;
-  late VideoPlayerController _controller;
-
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('img/LogoMasuk.mp4')
-      ..initialize().then((_) {
-        setState(() {});
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        _isAnimated = true;
       });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    });
   }
 
   Future<UserCredential?> _signInWithGoogle() async {
@@ -83,21 +75,20 @@ class _loginScreenState extends State<loginScreen> {
         systemOverlayStyle:
             const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
       ),
-      body: Stack(
-        children: [
-          AnimatedPositioned(
+      body: Stack(children: [
+        AnimatedPositioned(
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeInOut,
+          top: _isAnimated ? mq.height * 0.23 : mq.height * 0.5,
+          left: _isAnimated ? mq.width * 0.1 : mq.width * 0.5,
+          child: AnimatedContainer(
             duration: const Duration(seconds: 1),
             curve: Curves.easeInOut,
-            top: _isAnimated ? mq.height * 0.23 : mq.height * 0.5,
-            left: _isAnimated ? mq.width * 0.1 : mq.width * 0.5,
-            child: AnimatedContainer(
-              duration: const Duration(seconds: 1),
-              curve: Curves.easeInOut,
-              width: _isAnimated ? mq.width * 0.8 : 0,
-              height: _isAnimated ? mq.height * 0.3 : 0,
-              child: VideoPlayer(_controller),
-            ),
+            width: _isAnimated ? mq.width * 0.8 : 0,
+            height: _isAnimated ? mq.height * 0.3 : 0,
+            child: Image.asset('img/logo12.png'),
           ),
+        ),
         Positioned(
             bottom: mq.height * .15,
             left: mq.width * .05,
