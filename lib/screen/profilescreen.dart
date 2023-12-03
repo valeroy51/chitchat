@@ -211,12 +211,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
-                        final List<XFile>? Images =
-                            await picker.pickMultiImage(imageQuality: 80);
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 80);
+                        if (image != null) {
+                          log('Image Path: ${image.path}');
+                          setState(() {
+                            _image = image.path;
+                          });
 
-                        for (var i in Images!) {
-                          log('Images Path: ${i.path}');
-                          await apis.sendChatImage(widget.user, File(i.path));
+                          apis.updateProfilePicture(File(_image!));
+                          Navigator.pop(context);
                         }
                       },
                       child: Image.asset("img/camera.png")),
