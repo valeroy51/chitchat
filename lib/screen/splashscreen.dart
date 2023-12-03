@@ -51,7 +51,7 @@ class _splashScreenState extends State<splashScreen> {
           bottom: mq.height * .15,
           width: mq.width,
           child: const Text(
-            'From Us to You 🤩',
+            'From Us to You',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 17,

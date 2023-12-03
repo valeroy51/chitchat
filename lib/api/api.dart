@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-
 import '../models/chatuser.dart';
 import '../models/Message.dart';
 
 class apis {
+  final String? uid;
+  apis({this.uid});
+
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
@@ -52,7 +53,7 @@ class apis {
       final body = {
         "to": user.PushToken,
         "notification": {
-          "title": user.Name,
+          "title": me.Name,
           "body": msg,
           "android_channel_id": "Chats"
         },
