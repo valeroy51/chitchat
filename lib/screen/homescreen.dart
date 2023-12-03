@@ -198,7 +198,7 @@ class _homeScreenState extends State<homeScreen> {
                 
                 }
 
-              } else {
+              else {
                 setState(() {
                   _index = Index;
                   if (Index == 1) {
@@ -218,12 +218,14 @@ class _homeScreenState extends State<homeScreen> {
                   }
                 });
               }
-            },
+            }
           ),
         ),
       ),
     );
   }
+
+  
 
   void _addChatUserDialog() {
     String email = '';
