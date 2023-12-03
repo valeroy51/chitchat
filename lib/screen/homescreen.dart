@@ -1,16 +1,20 @@
 import 'dart:developer';
-import 'package:chitchat/main.dart';
+
 import 'package:chitchat/models/chatuser.dart';
-import 'package:chitchat/widget/chat_user_card.dart';
-import 'package:chitchat/screen/profilescreen.dart';
-import 'package:chitchat/screen/status/StatusPage.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chitchat/screen/profilescreen.dart';
+import 'package:chitchat/screen/status/StatusWidget.dart';
+import 'package:chitchat/widget/chat_user_card.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../helper/dialog.dart';
+
 import '../api/api.dart';
+
+import '../helper/dialog.dart';
+import '../main.dart';
+
 
 class homeScreen extends StatefulWidget {
   const homeScreen({Key? key}) : super(key: key);
@@ -113,7 +117,7 @@ class _homeScreenState extends State<homeScreen> {
                         MaterialPageRoute(
                             builder: (_) => ProfileScreen(user: apis.me)));
                   },
-                  icon: const Icon(Icons.more_vert))
+                  icon: const Icon(Icons.more_vert)),
             ],
           ),
           floatingActionButton: Padding(
@@ -187,22 +191,33 @@ class _homeScreenState extends State<homeScreen> {
                   label: 'Status',
                   backgroundColor: Colors.indigo)
             ],
-            onTap: (index) {
-              if (_index == index) {
-                if (index == 0) {
-                  // Do something for index 0
-                } else if (index == 1) {
-                  // Do something for index 1
-                }
+
+            onTap: (Index) {
+              if (_index == Index) {
+                if (Index == 0) {
+                } else if (Index == 1) {}
+
               } else {
                 setState(() {
                   _index = index;
                   if (index == 1) {
                     Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => const StatusPage()));
-                  } else if (index == 0) {
+
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const StatusWidget())); //ganti yang ini
+
                     Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => const homeScreen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const StatusWidget())); //ganti yang ini
+                  }
+                  if (Index == 0) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) => const homeScreen()));
+
                   }
                 });
               }
