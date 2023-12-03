@@ -1,21 +1,19 @@
 import 'dart:developer';
+import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chatuser.dart';
-import 'package:chitchat/models/Message.dart';
+import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StatusPage.dart';
-import 'package:chitchat/widget/chat_user_card.dart';
+import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/dialog.dart';
 import '../api/api.dart';
-import '../main.dart';
-import 'package:chitchat/screen/NoteScreen.dart';
-import 'package:chitchat/screen/status/StatusPage.dart';
 
 class homeScreen extends StatefulWidget {
-  const homeScreen({super.key});
+  const homeScreen({Key? key}) : super(key: key);
 
   @override
   State<homeScreen> createState() => _homeScreenState();
@@ -189,43 +187,31 @@ class _homeScreenState extends State<homeScreen> {
                   label: 'Status',
                   backgroundColor: Colors.indigo)
             ],
-            onTap: (Index) {
-              if (_index == Index) {
-                if (Index == 0) {
-                } else if (Index == 1) {}
-                
-                } else if (Index == 1) {
-                
+            onTap: (index) {
+              if (_index == index) {
+                if (index == 0) {
+                  // Do something for index 0
+                } else if (index == 1) {
+                  // Do something for index 1
                 }
-
-              else {
+              } else {
                 setState(() {
-                  _index = Index;
-                  if (Index == 1) {
+                  _index = index;
+                  if (index == 1) {
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                const StatusPage())); //ganti yang ini
-
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => const StatusPage())); //ganti yang ini
-
-                  }
-                  if (Index == 0) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => const homeScreen()));
+                        context, MaterialPageRoute(builder: (_) => const StatusPage()));
+                  } else if (index == 0) {
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (_) => const homeScreen()));
                   }
                 });
               }
-            }
+            },
           ),
         ),
       ),
     );
   }
-
-  
 
   void _addChatUserDialog() {
     String email = '';
