@@ -5,15 +5,18 @@ import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StatusWidget.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../api/api.dart';
+
 import '../helper/dialog.dart';
 import '../main.dart';
 
+
 class homeScreen extends StatefulWidget {
-  const homeScreen({super.key});
+  const homeScreen({Key? key}) : super(key: key);
 
   @override
   State<homeScreen> createState() => _homeScreenState();
@@ -187,13 +190,15 @@ class _homeScreenState extends State<homeScreen> {
                   label: 'Status',
                   backgroundColor: Colors.indigo)
             ],
+
             onTap: (Index) {
               if (_index == Index) {
               } else {
                 setState(() {
-                  _index = Index;
-                  if (Index == 1) {
+                  _index = index;
+                  if (index == 1) {
                     Navigator.pushReplacement(
+
                         context,
                         MaterialPageRoute(
                             builder: (_) => const StatusWidget()));
@@ -201,6 +206,7 @@ class _homeScreenState extends State<homeScreen> {
                   if (Index == 0) {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (_) => const homeScreen()));
+
                   }
                 });
               }
