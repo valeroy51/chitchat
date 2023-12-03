@@ -18,12 +18,12 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_notification_channel: ^2.0.0
+  gallery_saver: ^2.1.1
+  google_nav_bar: ^5.0.6
   google_sign_in: ^6.1.6
   http: 0.13.3
   image_picker: ^1.0.4
   story_view: ^0.14.0
-  gallery_saver: ^2.1.1
-  google_nav_bar: ^5.0.6
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
@@ -40,14 +40,8 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
-    - img/logo.png
-    - img/logo1.png
     - img/google.png
-    - img/front.png
-    - img/logo11.png
     - img/logo12.png
-    - img/other.png
-    - img/Logo dark.png
     - img/camera.png
     - img/gallery.png
     - img/are.png
@@ -56,6 +50,4 @@ flutter:
     - img/jesen.png
     - img/roy.png
     - img/anto.png
-    
-
-
+    - img/Logo dark.png

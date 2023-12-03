@@ -24,8 +24,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       appBar: AppBar(
         backgroundColor: AppStyle.cardsColor[color_id],
         elevation: 0.0,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
           "Add a new Note",
           style: TextStyle(color: Colors.black),
         ),
@@ -35,22 +35,22 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           TextField(
             controller: _titleController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: InputBorder.none, hintText: "Note Title"),
             style: AppStyle.mainTitle,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8.0,
           ),
           Text(date, style: AppStyle.dateTitle),
-          SizedBox(
+          const SizedBox(
             height: 28.0,
           ),
           TextField(
             controller: _mainController,
             keyboardType: TextInputType.multiline,
             maxLines: null,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: InputBorder.none, hintText: "Note Content"),
             style: AppStyle.mainContent,
           ),
@@ -68,10 +68,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             }).then((value) {
               print(value.id);
               Navigator.pop(context);
-            }).catchError((error)=> print("Failed to add new note due to $error"));
+            }).catchError(
+                (error) => print("Failed to add new note due to $error"));
           }
         },
-        child: Icon(Icons.save),
+        child: const Icon(Icons.save),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/helper/dialog.dart';
@@ -8,8 +7,7 @@ import 'package:chitchat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-
-import '../models/Message.dart';
+import 'package:chitchat/models/Message.dart';
 
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
@@ -176,19 +174,18 @@ class _MessageCardState extends State<MessageCard> {
                       ),
                       name: 'Save Image',
                       onTap: () async {
-                        try{
-                           log('Image Url: ${widget.message.msg}');
-                       await GallerySaver.saveImage(widget.message.msg,
-                       albumName: 'ChitChat')
-                       .then((success) {
-                      Navigator.pop(context);
-                        if(success != null && success){
-                          dialog.showSnackBar(
-                            context, "Image Successfully Saved!");
-                        }
-                        });
-                        }
-                        catch(e){
+                        try {
+                          log('Image Url: ${widget.message.msg}');
+                          await GallerySaver.saveImage(widget.message.msg,
+                                  albumName: 'ChitChat')
+                              .then((success) {
+                            Navigator.pop(context);
+                            if (success != null && success) {
+                              dialog.showSnackBar(
+                                  context, "Image Successfully Saved!");
+                            }
+                          });
+                        } catch (e) {
                           log('ErrorWhileSavingImg: $e');
                         }
                       }),
@@ -209,7 +206,7 @@ class _MessageCardState extends State<MessageCard> {
                     onTap: () {
                       Navigator.pop(context);
 
-                      _showMessageUpdateDialog ();
+                      _showMessageUpdateDialog();
                     }),
               if (isMe)
                 _OptionItem(
@@ -250,32 +247,51 @@ class _MessageCardState extends State<MessageCard> {
           );
         });
   }
-  
+
   void _showMessageUpdateDialog() {
     String updateMsg = widget.message.msg;
 
-    showDialog(context: context, builder: (_) => AlertDialog(
-      contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: const Row(children: [Icon(Icons.message, color:Colors.blue, size: 28), Text('Edit Message')]),
-
-      content: TextFormField(
-        initialValue: updateMsg,
-        maxLines:null,
-        onChanged: (value) => updateMsg = value,
-        decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),),
-    
-      actions: [
-        MaterialButton(onPressed: (){
-          Navigator.pop(context);
-        }, child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 16),),),
-
-        MaterialButton(onPressed: (){
-          Navigator.pop(context);
-          apis.updateMessage(widget.message, updateMsg);
-        }, child: const Text('Edit', style: TextStyle(color: Colors.blue, fontSize: 16),),)
-      ],
-    ));
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              contentPadding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 20, bottom: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: const Row(children: [
+                Icon(Icons.message, color: Colors.blue, size: 28),
+                Text('Edit Message')
+              ]),
+              content: TextFormField(
+                initialValue: updateMsg,
+                maxLines: null,
+                onChanged: (value) => updateMsg = value,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15))),
+              ),
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    apis.updateMessage(widget.message, updateMsg);
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                )
+              ],
+            ));
   }
 }
 

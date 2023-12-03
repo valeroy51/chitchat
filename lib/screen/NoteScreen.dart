@@ -4,7 +4,6 @@ import 'package:chitchat/models/note_card.dart';
 import 'package:chitchat/models/note_editor.dart';
 import 'package:chitchat/models/note_reader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NoteScreen extends StatelessWidget {
@@ -25,7 +24,7 @@ class NoteScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Your recent Notes",
               style: TextStyle(
                 color: Colors.white,
@@ -34,7 +33,7 @@ class NoteScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Expanded(
@@ -43,13 +42,13 @@ class NoteScreen extends StatelessWidget {
                     FirebaseFirestore.instance.collection("Notes").snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(
+                    return const Center(
                       child: Text(
                         "There are no Notes",
                         style: TextStyle(
@@ -63,7 +62,8 @@ class NoteScreen extends StatelessWidget {
                   }
 
                   return GridView(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
                     children: snapshot.data!.docs
@@ -85,10 +85,13 @@ class NoteScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> NoteEditorScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const NoteEditorScreen()));
         },
-        label: Text("Add Note"),
-        icon: Icon(Icons.add),
+        label: const Text("Add Note"),
+        icon: const Icon(Icons.add),
       ),
     );
   }
