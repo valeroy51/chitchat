@@ -12,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/helper/dialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qr_flutter/qr_flutter.dart'; // Import the qr_flutter package
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
@@ -23,6 +24,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _image;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,8 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile Screen'),
-          systemOverlayStyle:
-              const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+          systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 10),
@@ -45,13 +46,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await apis.auth.signOut().then((value) async {
                 await GoogleSignIn().signOut().then((value) {
                   Navigator.pop(context);
-
                   Navigator.pop(context);
 
                   apis.auth = FirebaseAuth.instance;
 
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const loginScreen()));
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const loginScreen()),
+                  );
                 });
               });
             },
@@ -74,25 +76,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       _image != null
                           ? ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(mq.height * 1),
+                              borderRadius: BorderRadius.circular(mq.height * 1),
                               child: Image.file(
                                 File(_image!),
                                 width: mq.height * .2,
                                 height: mq.height * .2,
                                 fit: BoxFit.cover,
-                              ))
+                              ),
+                            )
                           : ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(mq.height * 1),
+                              borderRadius: BorderRadius.circular(mq.height * 1),
                               child: CachedNetworkImage(
-                                  width: mq.height * .2,
-                                  height: mq.height * .2,
-                                  fit: BoxFit.fill,
-                                  imageUrl: widget.user.Image,
-                                  errorWidget: (context, url, error) =>
-                                      const CircleAvatar(
-                                          child: Icon(CupertinoIcons.person))),
+                                width: mq.height * .2,
+                                height: mq.height * .2,
+                                fit: BoxFit.fill,
+                                imageUrl: widget.user.Image,
+                                errorWidget: (context, url, error) => const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person),
+                                ),
+                              ),
                             ),
                       Positioned(
                         bottom: 0,
@@ -106,19 +108,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.white,
                           child: const Icon(Icons.edit, color: Colors.blue),
                         ),
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(height: mq.height * .03),
                   Text(widget.user.Email,
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 16)),
+                      style: const TextStyle(color: Colors.black, fontSize: 16)),
                   SizedBox(height: mq.height * .05),
                   TextFormField(
                     initialValue: widget.user.Name,
                     onSaved: (val) => apis.me.Name = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : "Required Field",
+                    validator: (val) => val != null && val.isNotEmpty ? null : "Required Field",
                     decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person, color: Colors.blue),
                         border: OutlineInputBorder(),
@@ -129,11 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextFormField(
                     initialValue: widget.user.About,
                     onSaved: (val) => apis.me.About = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : "Required Field",
+                    validator: (val) => val != null && val.isNotEmpty ? null : "Required Field",
                     decoration: const InputDecoration(
-                        prefixIcon:
-                            Icon(Icons.info_outline, color: Colors.blue),
+                        prefixIcon: Icon(Icons.info_outline, color: Colors.blue),
                         border: OutlineInputBorder(),
                         hintText: "eg. Feeling Happy",
                         label: Text("About")),
@@ -147,14 +145,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         apis.updateUserInfo().then((value) {
-                          dialog.showSnackBar(
-                              context, "Profile Updated Succesfully!");
+                          dialog.showSnackBar(context, "Profile Updated Successfully!");
                         });
                       }
                     },
                     icon: const Icon(Icons.edit),
                     label: const Text("UPDATE"),
-                  )
+                  ),
+                  SizedBox(height: mq.height * .05),
+                  QrImageView(
+                    data: widget.user.Email,
+                    version: QrVersions.auto,
+                    size: 150.0,
+                  ),
                 ],
               ),
             ),
@@ -166,68 +169,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showBottomSheet() {
     showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        builder: (_) {
-          return ListView(
-            shrinkWrap: true,
-            padding:
-                EdgeInsets.only(top: mq.height * .05, bottom: mq.height * .1),
-            children: [
-              const Text('Pick Profile Picture',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              SizedBox(
-                height: mq.height * .02,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
-                      onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 80);
-                        if (image != null) {
-                          log('image path: ${image.path} --MimeType: ${image.mimeType}');
-                          setState(() {
-                            _image = image.path;
-                          });
-                          apis.updateProfilePicture(File(_image!));
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Image.asset("img/gallery.png")),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
-                      onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 80);
-                        if (image != null) {
-                          log('Image Path: ${image.path}');
-                          setState(() {
-                            _image = image.path;
-                          });
-
-                          apis.updateProfilePicture(File(_image!));
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Image.asset("img/camera.png")),
-                ],
-              )
-            ],
-          );
-        });
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      builder: (_) {
+        return ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.only(top: mq.height * .05, bottom: mq.height * .1),
+          children: [
+            const Text(
+              'Pick Profile Picture',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: mq.height * .02),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    fixedSize: Size(mq.width * .3, mq.height * .15),
+                  ),
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.gallery, imageQuality: 80);
+                    if (image != null) {
+                      log('image path: ${image.path} --MimeType: ${image.mimeType}');
+                      setState(() {
+                        _image = image.path;
+                      });
+                      apis.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Image.asset("img/gallery.png"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    fixedSize: Size(mq.width * .3, mq.height * .15),
+                  ),
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 80);
+                    if (image != null) {
+                      log('Image Path: ${image.path}');
+                      setState(() {
+                        _image = image.path;
+                      });
+                      apis.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Image.asset("img/camera.png"),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }
