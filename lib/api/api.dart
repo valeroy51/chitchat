@@ -76,6 +76,25 @@ class apis {
     }
   }
 
+  static Future<ChatUser?> getUserByEmail(String email) async {
+    try {
+      final QuerySnapshot result = await firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+      if (result.docs.isNotEmpty) {
+        return ChatUser.fromJson(result.docs.first.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error fetching user by email: $e');
+      return null;
+    }
+  }
+
+
   static Future<bool> userExists() async {
     return (await firestore.collection('Users').doc(user.uid).get()).exists;
   }
