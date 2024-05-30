@@ -12,7 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/helper/dialog.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qr_flutter/qr_flutter.dart'; // Import the qr_flutter package
+import 'package:chitchat/screen/QrScreen.dart';  // Import QrScreen
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
@@ -33,6 +33,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           title: const Text('Profile Screen'),
           systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.qr_code),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => QrScreen(email: widget.user.Email), // Navigate to QrScreen
+                ),
+              ),
+            ),
+          ],
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 10),
@@ -57,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
               });
             },
-            icon: const Icon(Icons.add_comment_rounded),
+            icon: const Icon(Icons.logout),
             label: const Text("Logout"),
           ),
         ),
@@ -152,12 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: const Icon(Icons.edit),
                     label: const Text("UPDATE"),
                   ),
-                  SizedBox(height: mq.height * .05),
-                  QrImageView(
-                    data: widget.user.Email,
-                    version: QrVersions.auto,
-                    size: 150.0,
-                  ),
+                  SizedBox(height: 20)
                 ],
               ),
             ),
