@@ -9,7 +9,9 @@ class ChatUser {
     required this.IsOnline,
     required this.Name,
     required this.About,
+    this.isArchived = false, // Properti baru untuk status arsip
   });
+
   late String Email;
   late String LastSeen;
   late String PushToken;
@@ -19,6 +21,7 @@ class ChatUser {
   late bool IsOnline;
   late String Name;
   late String About;
+  late bool isArchived; // Properti baru untuk status arsip
 
   ChatUser.fromJson(Map<String, dynamic> json) {
     Email = json['Email'] ?? '';
@@ -27,9 +30,10 @@ class ChatUser {
     CreateAt = json['Create_at'] ?? '';
     Id = json['Id'] ?? '';
     Image = json['Image'] ?? '';
-    IsOnline = json['Is_online'] ?? '';
+    IsOnline = json['Is_online'] ?? false;
     Name = json['Name'] ?? '';
     About = json['About'] ?? '';
+    isArchived = json['isArchived'] ?? false; // Handle properti arsip
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +47,7 @@ class ChatUser {
     data['Is_online'] = IsOnline;
     data['Name'] = Name;
     data['About'] = About;
+    data['isArchived'] = isArchived; // Sertakan properti arsip
     return data;
   }
 }
