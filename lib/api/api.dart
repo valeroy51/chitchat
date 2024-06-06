@@ -17,18 +17,17 @@ class apis {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
   static ChatUser me = ChatUser(
-      Id: user.uid,
-      Name: user.displayName.toString(),
-      Email: user.email.toString(),
-      About: "Hey, There I am using ChitChat!",
-      Image: user.photoURL.toString(),
-      CreateAt: '',
-      IsOnline: false,
-      LastSeen: '',
-      PushToken: '',
-       
-      );
-      
+    Id: user.uid,
+    Name: user.displayName.toString(),
+    Email: user.email.toString(),
+    About: "Hey, There I am using ChitChat!",
+    Image: user.photoURL.toString(),
+    CreateAt: '',
+    IsOnline: false,
+    LastSeen: '',
+    PushToken: '',
+  );
+
   static User get user => auth.currentUser!;
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
   static Future<void> getFirebaseMessagingToken() async {
@@ -87,7 +86,8 @@ class apis {
           .limit(1)
           .get();
       if (result.docs.isNotEmpty) {
-        return ChatUser.fromJson(result.docs.first.data() as Map<String, dynamic>);
+        return ChatUser.fromJson(
+            result.docs.first.data() as Map<String, dynamic>);
       } else {
         return null;
       }
@@ -96,7 +96,6 @@ class apis {
       return null;
     }
   }
-
 
   static Future<bool> userExists() async {
     return (await firestore.collection('Users').doc(user.uid).get()).exists;
@@ -125,8 +124,6 @@ class apis {
       return false;
     }
   }
-
-
 
   static Future<void> getSelfInfo() async {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
@@ -197,17 +194,14 @@ class apis {
     });
   }
 
-
-
   static Stream<QuerySnapshot> getArchivedChats(String userId) {
     return firestore
         .collection('chats')
         .where('isArchived', isEqualTo: true)
-        .where('my_users', arrayContains: userId) // Assuming userId is in participants array
+        .where('my_users',
+            arrayContains: userId) // Assuming userId is in participants array
         .snapshots();
   }
-
-
 
   static Future<void> updateProfilePicture(File file) async {
     final ext = file.path.split('.').last;
@@ -256,13 +250,13 @@ class apis {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllChats(String userId) {
-  return firestore
-      .collection('chats')
-      .where('participants', arrayContains: userId)
-      .snapshots();
-}
-
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllChats(
+      String userId) {
+    return firestore
+        .collection('chats')
+        .where('participants', arrayContains: userId)
+        .snapshots();
+  }
 
   static Future<void> sendMessage(
       ChatUser chatUser, String msg, Type type) async {
@@ -332,42 +326,39 @@ class apis {
         .update({'msg': updateMsg});
   }
 
-Future<void> archiveChat(String userId) async {
-  try {
-    final userDoc = FirebaseFirestore.instance.collection('Users').doc(userId);
-    final docSnapshot = await userDoc.get();
-    
-    if (docSnapshot.exists) {
-      await userDoc.update({
-        'isArchived': true,
-      });
-    } else {
-      log('Error archiving chat: Document not found for user ID: $userId');
+  Future<void> archiveChat(String userId) async {
+    try {
+      final userDoc =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+      final docSnapshot = await userDoc.get();
+
+      if (docSnapshot.exists) {
+        await userDoc.update({
+          'isArchived': true,
+        });
+      } else {
+        log('Error archiving chat: Document not found for user ID: $userId');
+      }
+    } catch (e) {
+      log('Error archiving chat: $e');
     }
-  } catch (e) {
-    log('Error archiving chat: $e');
+  }
+
+  static Future<void> unarchiveChat(String userId) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .get();
+      if (docSnapshot.exists) {
+        await docSnapshot.reference.update({
+          'isArchived': false,
+        });
+      } else {
+        log('Error unarchiving chat: Document not found');
+      }
+    } catch (e) {
+      log('Error unarchiving chat: $e');
+    }
   }
 }
-
-
-
-static Future<void> unarchiveChat(String userId) async {
-  try {
-    final docSnapshot = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
-    if (docSnapshot.exists) {
-      await docSnapshot.reference.update({
-        'isArchived': false,
-      });
-    } else {
-      log('Error unarchiving chat: Document not found');
-    }
-  } catch (e) {
-    log('Error unarchiving chat: $e');
-
-    
-  }
-}
-
-
-}
-

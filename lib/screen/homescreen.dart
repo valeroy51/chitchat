@@ -72,7 +72,8 @@ class _homeScreenState extends State<homeScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+            systemOverlayStyle:
+                const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
             leading: GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -128,7 +129,9 @@ class _homeScreenState extends State<homeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const ArchiveScreen(userId: '',),
+                        builder: (_) => const ArchiveScreen(
+                          userId: '',
+                        ),
                       ),
                     );
                   },
@@ -159,7 +162,8 @@ class _homeScreenState extends State<homeScreen> {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                         case ConnectionState.none:
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         case ConnectionState.active:
                         case ConnectionState.done:
                           final data = snapshot.data?.docs;
@@ -167,7 +171,9 @@ class _homeScreenState extends State<homeScreen> {
                                   ?.map((e) => ChatUser.fromJson(e.data()))
                                   .toList() ??
                               [];
-                          _list = _list.where((user) => !user.isArchived).toList(); // Filter pengguna yang tidak diarsipkan
+                          _list = _list
+                              .where((user) => !user.isArchived)
+                              .toList(); // Filter pengguna yang tidak diarsipkan
 
                           if (_list.isNotEmpty) {
                             return ListView.builder(
@@ -181,7 +187,8 @@ class _homeScreenState extends State<homeScreen> {
                                       user: _isSearching
                                           ? _searchList[index]
                                           : _list[index],
-                                      onArchive: _removeArchivedUser); // Set callback onArchive
+                                      onArchive:
+                                          _removeArchivedUser); // Set callback onArchive
                                 });
                           } else {
                             return const Center(
@@ -214,8 +221,10 @@ class _homeScreenState extends State<homeScreen> {
                 setState(() {
                   _index = Index;
                   if (Index == 1) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => const StatusWidget()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => StatusWidget(user: apis.me)));
                   }
                   if (Index == 0) {
                     Navigator.pushReplacement(context,
@@ -253,13 +262,16 @@ class _homeScreenState extends State<homeScreen> {
         builder: (context, setState) {
           return WillPopScope(
             onWillPop: () async {
-              _isDialogOpen = false; // Set flag dialog terbuka menjadi false saat dialog ditutup
+              _isDialogOpen =
+                  false; // Set flag dialog terbuka menjadi false saat dialog ditutup
               showDialogAgain(); // Memunculkan dialog lagi
               return true;
             },
             child: AlertDialog(
-              contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              contentPadding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 20, bottom: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: const Row(
                 children: [
                   Icon(Icons.person_add, color: Colors.blue, size: 28),
@@ -275,7 +287,8 @@ class _homeScreenState extends State<homeScreen> {
                     decoration: InputDecoration(
                       hintText: 'Email Id',
                       prefixIcon: const Icon(Icons.email, color: Colors.blue),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15)),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -304,7 +317,8 @@ class _homeScreenState extends State<homeScreen> {
                         ),
                       );
 
-                      _isDialogOpen = false; // Set flag dialog terbuka menjadi false setelah selesai pemindaian QR
+                      _isDialogOpen =
+                          false; // Set flag dialog terbuka menjadi false setelah selesai pemindaian QR
                       showDialogAgain(); // Memunculkan dialog lagi setelah pemindaian QR selesai
                     },
                     icon: Icon(Icons.qr_code_scanner),
@@ -312,7 +326,9 @@ class _homeScreenState extends State<homeScreen> {
                   ),
                   if (email.isNotEmpty) ...[
                     SizedBox(height: 10),
-                    Text('Scanned Email: $email', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('Scanned Email: $email',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
                 ],
               ),
@@ -320,14 +336,17 @@ class _homeScreenState extends State<homeScreen> {
                 MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _isDialogOpen = false; // Set flag dialog terbuka menjadi false saat tombol cancel diklik
+                    _isDialogOpen =
+                        false; // Set flag dialog terbuka menjadi false saat tombol cancel diklik
                   },
-                  child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                  child: const Text('Cancel',
+                      style: TextStyle(color: Colors.blue, fontSize: 16)),
                 ),
                 MaterialButton(
                   onPressed: () async {
                     Navigator.pop(context);
-                    _isDialogOpen = false; // Set flag dialog terbuka menjadi false setelah tombol add diklik
+                    _isDialogOpen =
+                        false; // Set flag dialog terbuka menjadi false setelah tombol add diklik
                     if (email.isNotEmpty) {
                       bool userExists = await apis.addChatUser(email);
                       if (!userExists) {
@@ -352,7 +371,8 @@ class _homeScreenState extends State<homeScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+        contentPadding:
+            const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('User Information'),
         content: Column(
@@ -371,7 +391,8 @@ class _homeScreenState extends State<homeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Text(user.Name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(user.Name,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 5),
             Text(user.Email, style: TextStyle(fontSize: 14)),
             SizedBox(height: 5),
@@ -383,7 +404,8 @@ class _homeScreenState extends State<homeScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Close', style: TextStyle(color: Colors.blue, fontSize: 16)),
+            child: const Text('Close',
+                style: TextStyle(color: Colors.blue, fontSize: 16)),
           ),
           MaterialButton(
             onPressed: () async {

@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:chitchat/main.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/homescreen.dart';
@@ -6,9 +10,13 @@ import 'package:chitchat/screen/status/StoryView.dart';
 import 'package:chitchat/screen/status/StoryViewed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:chitchat/models/chatuser.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StatusWidget extends StatefulWidget {
-  const StatusWidget({super.key});
+  final ChatUser user;
+  const StatusWidget({super.key, required this.user});
 
   @override
   State<StatusWidget> createState() => _StatusWidgetState();
@@ -19,6 +27,7 @@ class _StatusWidgetState extends State<StatusWidget> {
     apis.getSelfInfo();
   }
 
+  String? _image;
   int _index = 1;
 
   @override
@@ -52,30 +61,30 @@ class _StatusWidgetState extends State<StatusWidget> {
                   padding: const EdgeInsets.all(0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
-                    child: Image.asset(
-                      "img/logo12.png",
+                    child: CachedNetworkImage(
+                      imageUrl: widget.user.Image,
                       height: 55,
                       width: 55,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "ChitChat",
-                        style: TextStyle(
+                        widget.user.Name,
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8.0,
                       ),
                       Text(
-                        "FROM US TO YOU",
-                        style: TextStyle(
+                        widget.user.About,
+                        style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: Colors.black54),
@@ -223,6 +232,14 @@ class _StatusWidgetState extends State<StatusWidget> {
           ]),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: FloatingActionButton(
+            onPressed: () {
+              _showBottomSheet();
+            },
+            child: const Icon(Icons.stream_outlined)),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         type: BottomNavigationBarType.shifting,
@@ -244,11 +261,15 @@ class _StatusWidgetState extends State<StatusWidget> {
             setState(() {
               _index = Index;
               if (Index == 1) {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const StatusWidget()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => StatusWidget(user: apis.me)));
 
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const StatusWidget()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => StatusWidget(user: apis.me)));
               }
               if (Index == 0) {
                 Navigator.pushReplacement(context,
@@ -258,6 +279,80 @@ class _StatusWidgetState extends State<StatusWidget> {
           }
         },
       ),
+    );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      builder: (_) {
+        return ListView(
+          shrinkWrap: true,
+          padding:
+              EdgeInsets.only(top: mq.height * .05, bottom: mq.height * .1),
+          children: [
+            const Text(
+              'Status',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: mq.height * .02),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    fixedSize: Size(mq.width * .3, mq.height * .15),
+                  ),
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.gallery, imageQuality: 80);
+                    if (image != null) {
+                      log('image path: ${image.path} --MimeType: ${image.mimeType}');
+                      setState(() {
+                        _image = image.path;
+                      });
+                      apis.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Image.asset("img/gallery.png"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    fixedSize: Size(mq.width * .3, mq.height * .15),
+                  ),
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 80);
+                    if (image != null) {
+                      log('Image Path: ${image.path}');
+                      setState(() {
+                        _image = image.path;
+                      });
+                      apis.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Image.asset("img/camera.png"),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

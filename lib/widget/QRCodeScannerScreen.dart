@@ -26,7 +26,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
       final code = scanData.code;
       if (code != null) {
         widget.onScan(code);
-        Navigator.of(context).pop(code);  // Pass the scanned code back
+        Navigator.of(context).pop(code); // Pass the scanned code back
       }
     });
   }

@@ -99,7 +99,9 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                                 ?.map((e) => ChatUser.fromJson(e.data()))
                                 .toList() ??
                             [];
-                        _list = _list.where((user) => user.isArchived).toList(); // Filter users that are archived
+                        _list = _list
+                            .where((user) => user.isArchived)
+                            .toList(); // Filter users that are archived
 
                         if (_list.isNotEmpty) {
                           return ListView.builder(
@@ -113,7 +115,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                                     user: _isSearching
                                         ? _searchList[index]
                                         : _list[index],
-                                    onArchive: _unarchiveChat); // Set callback onArchive
+                                    onArchive:
+                                        _unarchiveChat); // Set callback onArchive
                               });
                         } else {
                           return const Center(

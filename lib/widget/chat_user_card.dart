@@ -44,8 +44,8 @@ class _ChatUserCardState extends State<ChatUserCard> {
           stream: apis.getLastMessage(widget.user),
           builder: (context, snapshot) {
             final data = snapshot.data?.docs;
-            final list = data?.map((e) => Messages.fromJson(e.data())).toList() ??
-                [];
+            final list =
+                data?.map((e) => Messages.fromJson(e.data())).toList() ?? [];
             if (list.isNotEmpty) {
               _message = list[0];
             }
@@ -110,9 +110,13 @@ class _ChatUserCardState extends State<ChatUserCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            leading: Icon(widget.user.isArchived ? Icons.unarchive : Icons.archive, size: 30),
-            title: Text(widget.user.isArchived ? 'Unarchive' : 'Archive', style: const TextStyle(fontSize: 18)),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            leading: Icon(
+                widget.user.isArchived ? Icons.unarchive : Icons.archive,
+                size: 30),
+            title: Text(widget.user.isArchived ? 'Unarchive' : 'Archive',
+                style: const TextStyle(fontSize: 18)),
             onTap: () async {
               Navigator.pop(context);
               if (widget.user.isArchived) {
@@ -124,7 +128,8 @@ class _ChatUserCardState extends State<ChatUserCard> {
             },
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             leading: const Icon(Icons.delete, size: 30),
             title: const Text('Delete Chat', style: TextStyle(fontSize: 18)),
             onTap: () {
@@ -135,9 +140,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
           Container(
             margin: const EdgeInsets.only(bottom: 30),
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               leading: const Icon(Icons.block, size: 30),
-              title: const Text('Block Contact', style: TextStyle(fontSize: 18)),
+              title:
+                  const Text('Block Contact', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.pop(context);
                 // Implement block contact functionality
