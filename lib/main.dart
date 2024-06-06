@@ -9,7 +9,6 @@ import 'firebase_options.dart';
 
 late Size mq;
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);

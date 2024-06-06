@@ -12,7 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/helper/dialog.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:chitchat/screen/QrScreen.dart';  // Import QrScreen
+import 'package:chitchat/screen/QrScreen.dart'; // Import QrScreen
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
@@ -32,14 +32,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile Screen'),
-          systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
           actions: [
             IconButton(
               icon: Icon(Icons.qr_code),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => QrScreen(email: widget.user.Email), // Navigate to QrScreen
+                  builder: (_) => QrScreen(
+                      email: widget.user.Email), // Navigate to QrScreen
                 ),
               ),
             ),
@@ -87,7 +89,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       _image != null
                           ? ClipRRect(
-                              borderRadius: BorderRadius.circular(mq.height * 1),
+                              borderRadius:
+                                  BorderRadius.circular(mq.height * 1),
                               child: Image.file(
                                 File(_image!),
                                 width: mq.height * .2,
@@ -96,13 +99,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             )
                           : ClipRRect(
-                              borderRadius: BorderRadius.circular(mq.height * 1),
+                              borderRadius:
+                                  BorderRadius.circular(mq.height * 1),
                               child: CachedNetworkImage(
                                 width: mq.height * .2,
                                 height: mq.height * .2,
                                 fit: BoxFit.fill,
                                 imageUrl: widget.user.Image,
-                                errorWidget: (context, url, error) => const CircleAvatar(
+                                errorWidget: (context, url, error) =>
+                                    const CircleAvatar(
                                   child: Icon(CupertinoIcons.person),
                                 ),
                               ),
@@ -124,12 +129,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: mq.height * .03),
                   Text(widget.user.Email,
-                      style: const TextStyle(color: Colors.black, fontSize: 16)),
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 16)),
                   SizedBox(height: mq.height * .05),
                   TextFormField(
                     initialValue: widget.user.Name,
                     onSaved: (val) => apis.me.Name = val ?? '',
-                    validator: (val) => val != null && val.isNotEmpty ? null : "Required Field",
+                    validator: (val) =>
+                        val != null && val.isNotEmpty ? null : "Required Field",
                     decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person, color: Colors.blue),
                         border: OutlineInputBorder(),
@@ -140,9 +147,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextFormField(
                     initialValue: widget.user.About,
                     onSaved: (val) => apis.me.About = val ?? '',
-                    validator: (val) => val != null && val.isNotEmpty ? null : "Required Field",
+                    validator: (val) =>
+                        val != null && val.isNotEmpty ? null : "Required Field",
                     decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.info_outline, color: Colors.blue),
+                        prefixIcon:
+                            Icon(Icons.info_outline, color: Colors.blue),
                         border: OutlineInputBorder(),
                         hintText: "eg. Feeling Happy",
                         label: Text("About")),
@@ -156,7 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         apis.updateUserInfo().then((value) {
-                          dialog.showSnackBar(context, "Profile Updated Successfully!");
+                          dialog.showSnackBar(
+                              context, "Profile Updated Successfully!");
                         });
                       }
                     },
@@ -185,7 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (_) {
         return ListView(
           shrinkWrap: true,
-          padding: EdgeInsets.only(top: mq.height * .05, bottom: mq.height * .1),
+          padding:
+              EdgeInsets.only(top: mq.height * .05, bottom: mq.height * .1),
           children: [
             const Text(
               'Pick Profile Picture',

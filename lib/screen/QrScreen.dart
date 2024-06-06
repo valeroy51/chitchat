@@ -24,7 +24,7 @@ class QrScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),  // Add margin below the text
+            const SizedBox(height: 20), // Add margin below the text
             QrImageView(
               data: email,
               version: QrVersions.auto,
