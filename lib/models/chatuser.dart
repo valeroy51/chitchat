@@ -22,6 +22,7 @@ class ChatUser {
   late String Name;
   late String About;
   late bool isArchived; // Properti baru untuk status arsip
+  late bool isDelete;
 
   ChatUser.fromJson(Map<String, dynamic> json) {
     Email = json['Email'] ?? '';
@@ -34,6 +35,7 @@ class ChatUser {
     Name = json['Name'] ?? '';
     About = json['About'] ?? '';
     isArchived = json['isArchived'] ?? false; // Handle properti arsip
+    isDelete = json['isDelete'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +50,7 @@ class ChatUser {
     data['Name'] = Name;
     data['About'] = About;
     data['isArchived'] = isArchived; // Sertakan properti arsip
+    data['isDelete'] = isDelete;
     return data;
   }
 }

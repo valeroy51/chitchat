@@ -18,6 +18,10 @@ class ChatUserCard extends StatefulWidget {
 
   @override
   State<ChatUserCard> createState() => _ChatUserCardState();
+  
+  void onDelete(String userId) {}
+  
+  void onBlock(String userId) {}
 }
 
 class _ChatUserCardState extends State<ChatUserCard> {
@@ -101,58 +105,57 @@ class _ChatUserCardState extends State<ChatUserCard> {
   }
 
   void _showOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            leading: Icon(
-                widget.user.isArchived ? Icons.unarchive : Icons.archive,
-                size: 30),
-            title: Text(widget.user.isArchived ? 'Unarchive' : 'Archive',
-                style: const TextStyle(fontSize: 18)),
-            onTap: () async {
-              Navigator.pop(context);
-              if (widget.user.isArchived) {
-                await apis.unarchiveChat(widget.user.Id);
-              } else {
-                await apis().archiveChat(widget.user.Id);
-              }
-              widget.onArchive(widget.user); // Menggunakan user yang di-tahan
-            },
-          ),
-          ListTile(
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+    ),
+    builder: (context) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          leading: Icon(
+              widget.user.isArchived ? Icons.unarchive : Icons.archive,
+              size: 30),
+          title: Text(widget.user.isArchived ? 'Unarchive' : 'Archive',
+              style: const TextStyle(fontSize: 18)),
+          onTap: () async {
+            Navigator.pop(context);
+            if (widget.user.isArchived) {
+              await apis.unarchiveChat(widget.user.Id);
+            } else {
+              await apis().archiveChat(widget.user.Id);
+            }
+            widget.onArchive(widget.user);
+          },
+        ),
+        ListTile(
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             leading: const Icon(Icons.delete, size: 30),
             title: const Text('Delete Chat', style: TextStyle(fontSize: 18)),
-            onTap: () {
+             onTap: () async {
+        // Panggil fungsi untuk menghapus chat dari halaman utama
+        await apis.deleteChatFromMainPage(widget.user.Id);
+        
+        // Tutup halaman atau lakukan tindakan tambahan
+        Navigator.pop(context);
+      },
+          ), 
+        Container(
+          margin: const EdgeInsets.only(bottom: 30),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            leading: const Icon(Icons.block, size: 30),
+            title: const Text('Block Contact', style: TextStyle(fontSize: 18)),
+            onTap: () async {
               Navigator.pop(context);
-              // Implement delete chat functionality
             },
           ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 30),
-            child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              leading: const Icon(Icons.block, size: 30),
-              title:
-                  const Text('Block Contact', style: TextStyle(fontSize: 18)),
-              onTap: () {
-                Navigator.pop(context);
-                // Implement block contact functionality
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

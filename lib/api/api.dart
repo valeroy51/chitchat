@@ -326,23 +326,23 @@ class apis {
         .update({'msg': updateMsg});
   }
 
-  Future<void> archiveChat(String userId) async {
-    try {
-      final userDoc =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
-      final docSnapshot = await userDoc.get();
+    Future<void> archiveChat(String userId) async {
+      try {
+        final userDoc =
+            FirebaseFirestore.instance.collection('Users').doc(userId);
+        final docSnapshot = await userDoc.get();
 
-      if (docSnapshot.exists) {
-        await userDoc.update({
-          'isArchived': true,
-        });
-      } else {
-        log('Error archiving chat: Document not found for user ID: $userId');
+        if (docSnapshot.exists) {
+          await userDoc.update({
+            'isArchived': true,
+          });
+        } else {
+          log('Error archiving chat: Document not found for user ID: $userId');
+        }
+      } catch (e) {
+        log('Error archiving chat: $e');
       }
-    } catch (e) {
-      log('Error archiving chat: $e');
     }
-  }
 
   static Future<void> unarchiveChat(String userId) async {
     try {
@@ -361,4 +361,21 @@ class apis {
       log('Error unarchiving chat: $e');
     }
   }
+
+  static Future<void> deleteChatFromMainPage(String userId) async {
+  try {
+    log('Attempting to delete chat for user ID: $userId');
+    
+    // Dapatkan referensi ke koleksi Chats untuk pengguna yang bersangkutan
+    final userChatRef =
+            FirebaseFirestore.instance.collection('Users').doc(userId);
+    
+    // Hapus dokumen tersebut
+    await userChatRef.delete();
+
+    log('Successfully deleted chat for user ID: $userId');
+  } catch (e) {
+    log('Error deleting chat: $e');
+  }
+}
 }

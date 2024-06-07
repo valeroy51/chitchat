@@ -25,7 +25,7 @@ dependencies:
   google_sign_in: ^6.1.6
   http: 0.13.3
   image_picker: ^1.0.4
-  story_view: ^0.16.5
+  story_view: 0.16.3
 
 
 dev_dependencies:
