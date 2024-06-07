@@ -131,18 +131,16 @@ class _ChatUserCardState extends State<ChatUserCard> {
           },
         ),
         ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            leading: const Icon(Icons.delete, size: 30),
-            title: const Text('Delete Chat', style: TextStyle(fontSize: 18)),
-             onTap: () async {
-        // Panggil fungsi untuk menghapus chat dari halaman utama
-        await apis.deleteChatFromMainPage(widget.user.Id);
-        
-        // Tutup halaman atau lakukan tindakan tambahan
-        Navigator.pop(context);
-      },
-          ), 
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        leading: const Icon(Icons.delete, size: 30),
+        title: const Text('Delete Chat', style: TextStyle(fontSize: 18)),
+        onTap: () async {
+          Navigator.pop(context);
+          // Panggil fungsi untuk menghapus chat dari halaman utama
+          await apis.deleteChatFromMainPage(widget.user.Id); 
+        },
+      ),
+
         Container(
           margin: const EdgeInsets.only(bottom: 30),
           child: ListTile(

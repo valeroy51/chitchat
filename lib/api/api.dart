@@ -102,28 +102,42 @@ class apis {
   }
 
   static Future<bool> addChatUser(String email) async {
+  try {
     final data = await firestore
         .collection('Users')
         .where('Email', isEqualTo: email)
         .get();
 
-    log('Data: ${data.docs}');
-
     if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
-      log('user exists: ${data.docs.first.data()}');
+      // Assign the userId from the query result
+      String userId = data.docs.first.id;
 
       firestore
           .collection('Users')
           .doc(user.uid)
           .collection('my_users')
-          .doc(data.docs.first.id)
+          .doc(userId)
           .set({});
 
+      // Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
+      final userAdd =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+
+      await userAdd.update({
+        'chatsDeleted': false,
+      });
+
+      log('User with email $email has been added and chatsDeleted set to false.');
       return true;
     } else {
+      log('User with email $email does not exist or is the current user.');
       return false;
     }
+  } catch (e) {
+    log('Error adding user: $e');
+    return false;
   }
+}
 
   static Future<void> getSelfInfo() async {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
@@ -362,20 +376,32 @@ class apis {
     }
   }
 
-  static Future<void> deleteChatFromMainPage(String userId) async {
+static Future<void> deleteChatFromMainPage(String userId) async {
   try {
-    log('Attempting to delete chat for user ID: $userId');
+    log('Attempting to delete chats for user ID: $userId');
     
-    // Dapatkan referensi ke koleksi Chats untuk pengguna yang bersangkutan
-    final userChatRef =
-            FirebaseFirestore.instance.collection('Users').doc(userId);
+    // Referensi ke subkoleksi 'Chats' pengguna
+    final userChatRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userId)
+        .collection('Chats');
     
-    // Hapus dokumen tersebut
-    await userChatRef.delete();
+    // Dapatkan semua dokumen di subkoleksi 'Chats'
+    final chatDocs = await userChatRef.get();
 
-    log('Successfully deleted chat for user ID: $userId');
+    // Loop melalui setiap dokumen dan hapus satu per satu
+    for (var doc in chatDocs.docs) {
+      await userChatRef.doc(doc.id).delete();
+    }
+
+    // Update dokumen pengguna untuk menandai bahwa chats telah dihapus
+    final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+    await userDocRef.update({'chatsDeleted': true});
+
+    log('Successfully deleted all chats and updated user for ID: $userId');
   } catch (e) {
-    log('Error deleting chat: $e');
+    log('Error deleting chats: $e');
   }
 }
+
 }

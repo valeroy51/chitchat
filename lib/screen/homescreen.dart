@@ -175,6 +175,8 @@ class _homeScreenState extends State<homeScreen> {
                               .where((user) => !user.isArchived)
                               .toList(); // Filter pengguna yang tidak diarsipkan
 
+                          _list = _list.where((user) => !user.isArchived && !user.chatsDeleted).toList();
+
                           if (_list.isNotEmpty) {
                             return ListView.builder(
                                 itemCount: _isSearching
