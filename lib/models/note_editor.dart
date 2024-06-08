@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:chitchat/helper/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

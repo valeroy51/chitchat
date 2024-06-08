@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chitchat/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
+import 'package:chitchat/models/statusNote.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
@@ -306,6 +307,18 @@ class _StatusWidgetState extends State<StatusWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    fixedSize: Size(mq.width * .3, mq.height * .15),
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => StatusNote()));
+                  },
+                  child: Image.asset("img/note.png"),
+                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
