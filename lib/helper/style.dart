@@ -16,6 +16,14 @@ class AppStyle {
     Colors.blueGrey.shade100,
   ];
 
+  static List<TextStyle> family = [
+    const TextStyle(fontFamily: 'Roboto'),
+    const TextStyle(fontFamily: 'Montserrat'),
+    const TextStyle(fontFamily: 'Noto Serif'),
+    const TextStyle(fontFamily: 'Raleway'),
+    const TextStyle(fontFamily: 'Recursive'),
+  ];
+
   // Static text styles
   static TextStyle mainTitle = const TextStyle(
       fontSize: 18.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold);
@@ -25,4 +33,9 @@ class AppStyle {
       fontWeight: FontWeight.normal);
   static TextStyle dateTitle = const TextStyle(
       fontSize: 13.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500);
+  static TextStyle statusNote = TextStyle(
+      fontSize: 30.0,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.normal,
+      fontFamily: family[0].fontFamily);
 }

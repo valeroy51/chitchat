@@ -27,7 +27,6 @@ dependencies:
   image_picker: ^1.0.4
   story_view: 0.16.3
 
-
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
   flutter_lints: ^2.0.0
@@ -54,3 +53,23 @@ flutter:
     - img/roy.png
     - img/anto.png
     - img/Logo dark.png
+    - img/note.png
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat/Montserrat-VariableFont_wght.ttf
+        - asset: fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf
+          style: italic
+    - family: Noto Serif
+      fonts:
+        - asset: fonts/Noto_Serif/NotoSerif-VariableFont_wdth,wght.ttf
+        - asset: fonts/Noto_Serif/NotoSerif-Italic-VariableFont_wdth,wght.ttf
+          style: italic
+    - family: Raleway
+      fonts:
+        - asset: fonts/Raleway/Raleway-VariableFont_wght.ttf
+        - asset: fonts/Raleway/Raleway-Italic-VariableFont_wght.ttf
+          style: italic
+    - family: Recursive
+      fonts:
+        - asset: fonts/Recursive/Recursive-VariableFont_CASL,CRSV,MONO,slnt,wght.ttf
