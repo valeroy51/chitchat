@@ -344,39 +344,76 @@ class apis {
         .update({'msg': updateMsg});
   }
 
-  Future<void> archiveChat(String userId) async {
+  static Future<void> archiveChat(String userId, String contactUserId) async {
     try {
-      final userDoc =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
-      final docSnapshot = await userDoc.get();
+      final userDoc = firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(contactUserId);
 
+      final docSnapshot = await userDoc.get();
       if (docSnapshot.exists) {
         await userDoc.update({
           'isArchived': true,
         });
+        print('Chat archived successfully for contact user ID: $contactUserId');
       } else {
-        log('Error archiving chat: Document not found for user ID: $userId');
+        print(
+            'Error archiving chat: Document not found for contact user ID: $contactUserId');
       }
     } catch (e) {
-      log('Error archiving chat: $e');
+      print('Error archiving chat: $e');
     }
   }
 
-  static Future<void> unarchiveChat(String userId) async {
+  static Future<void> unarchiveChat(String userId, String contactUserId) async {
     try {
-      final docSnapshot = await FirebaseFirestore.instance
+      final userDoc = firestore
           .collection('Users')
           .doc(userId)
-          .get();
+          .collection('my_users')
+          .doc(contactUserId);
+
+      final docSnapshot = await userDoc.get();
       if (docSnapshot.exists) {
-        await docSnapshot.reference.update({
+        await userDoc.update({
           'isArchived': false,
         });
+        print(
+            'Chat unarchived successfully for contact user ID: $contactUserId');
       } else {
-        log('Error unarchiving chat: Document not found');
+        print(
+            'Error unarchiving chat: Document not found for contact user ID: $contactUserId');
       }
     } catch (e) {
-      log('Error unarchiving chat: $e');
+      print('Error unarchiving chat: $e');
+    }
+  }
+
+  static Future<void> blockUser(String userId, String blockedUserId) async {
+    try {
+      await firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(blockedUserId)
+          .update({'isBlocked': true});
+    } catch (e) {
+      print('Error blocking user: $e');
+    }
+  }
+
+  static Future<void> unblockUser(String userId, String blockedUserId) async {
+    try {
+      await firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(blockedUserId)
+          .update({'isBlocked': false});
+    } catch (e) {
+      print('Error unblocking user: $e');
     }
   }
 
@@ -407,5 +444,14 @@ class apis {
     } catch (e) {
       log('Error deleting chats: $e');
     }
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserArchive() {
+    return firestore
+        .collection('Users')
+        .doc(user.uid)
+        .collection('my_users')
+        .where('isArchived', isEqualTo: true)
+        .snapshots();
   }
 }

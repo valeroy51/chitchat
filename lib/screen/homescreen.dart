@@ -178,7 +178,10 @@ class _homeScreenState extends State<homeScreen> {
                               .where((user) =>
                                   !user.isArchived && !user.chatsDeleted)
                               .toList();
-
+                          _list = _list
+                              .where((user) =>
+                                  !user.isArchived && !user.chatsDeleted)
+                              .toList();
                           if (_list.isNotEmpty) {
                             return ListView.builder(
                                 itemCount: _isSearching
@@ -188,11 +191,12 @@ class _homeScreenState extends State<homeScreen> {
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return ChatUserCard(
-                                      user: _isSearching
-                                          ? _searchList[index]
-                                          : _list[index],
-                                      onArchive:
-                                          _removeArchivedUser); // Set callback onArchive
+                                    user: _isSearching
+                                        ? _searchList[index]
+                                        : _list[index],
+                                    onArchive: _removeArchivedUser,
+                                    isArchivedScreen: false,
+                                  ); // Set callback onArchive
                                 });
                           } else {
                             return const Center(
