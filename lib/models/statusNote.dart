@@ -1,20 +1,31 @@
+import 'dart:io';
 import 'dart:math';
+import 'package:chitchat/api/api.dart';
 import 'package:chitchat/helper/style.dart';
+import 'package:chitchat/main.dart';
+import 'package:chitchat/models/chatuser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 
 class StatusNote extends StatefulWidget {
-  StatusNote({super.key});
+  final ChatUser user;
+  const StatusNote({super.key, required this.user});
 
   @override
-  State<StatusNote> createState() => _StatusNodeState();
+  State<StatusNote> createState() => _StatusNoteState();
 }
 
-class _StatusNodeState extends State<StatusNote> {
+class _StatusNoteState extends State<StatusNote> {
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
   int family_id = Random().nextInt(AppStyle.family.length);
   String date = DateTime.now().toString();
-  TextEditingController _statusController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+  bool _showEmoji = false;
+
+  void initState() {
+    apis.getSelfInfo();
+  }
 
   void changeColor() {
     setState(() {
@@ -38,7 +49,10 @@ class _StatusNodeState extends State<StatusNote> {
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                setState(() => _showEmoji = !_showEmoji);
+              },
               icon: const Icon(Icons.sentiment_satisfied_outlined)),
           IconButton(
               onPressed: () {
@@ -61,6 +75,9 @@ class _StatusNodeState extends State<StatusNote> {
               controller: _statusController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
+              onTap: () {
+                if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
+              },
               decoration: const InputDecoration(
                   border: InputBorder.none, hintText: "Type a status"),
               style: AppStyle.statusNote.copyWith(
@@ -70,22 +87,37 @@ class _StatusNodeState extends State<StatusNote> {
             ),
           ),
           const Spacer(flex: 3),
+          if (_showEmoji)
+            SizedBox(
+              height: mq.height * .35,
+              child: EmojiPicker(
+                textEditingController: _statusController,
+                config: Config(
+                  bgColor: const Color.fromARGB(255, 234, 248, 255),
+                  columns: 7,
+                  initCategory: Category.FOODS,
+                  emojiSizeMax: 32 * (Platform.isAndroid ? 1.30 : 1.0),
+                ),
+              ),
+            )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppStyle.bgColor,
         onPressed: () {
           {
-            // FirebaseFirestore.instance.collection("Notes").add({
-            //   "note_title": _titleController.text,
-            //   "creation_date": date,
-            //   "note_content": _mainController.text,
-            //   "color_id": color_id
-            // }).then((value) {
-            //   print(value.id);
-            //   Navigator.pop(context);
-            // }).catchError(
-            //     (error) => print("Failed to add new note due to $error"));
+            FirebaseFirestore.instance.collection("Status").add({
+              "user": apis.me.Id,
+              "create_date": date,
+              "status_text": _statusController.text,
+              "image_path": "",
+              "color_id": color_id,
+              "family_id": family_id
+            }).then((value) {
+              print(value.id);
+              Navigator.pop(context);
+            }).catchError(
+                (error) => print("Failed to add new note due to $error"));
           }
         },
         child: const Icon(Icons.send),

@@ -7,12 +7,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
-import 'package:chitchat/screen/status/StatusWidget.dart';
+import 'package:chitchat/screen/statusScreen.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:chitchat/widget/QRCodeScannerScreen.dart';
-import '../api/api.dart';
-import '../helper/dialog.dart';
-import '../main.dart';
+import 'package:chitchat/api/api.dart';
+import 'package:chitchat/main.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({Key? key}) : super(key: key);
@@ -232,7 +231,7 @@ class _homeScreenState extends State<homeScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => StatusWidget(user: apis.me)));
+                            builder: (_) => StatusScreen(user: apis.me)));
                   }
                   if (Index == 0) {
                     Navigator.pushReplacement(context,

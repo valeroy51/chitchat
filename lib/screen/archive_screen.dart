@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Cloud Firestore
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
-import '../api/api.dart';
+import 'package:chitchat/api/api.dart';
 
 class ArchiveScreen extends StatefulWidget {
   final String userId;

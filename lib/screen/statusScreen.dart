@@ -1,9 +1,9 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:chitchat/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/models/statusNote.dart';
+import 'package:chitchat/models/statusPicture.dart';
 import 'package:chitchat/screen/NoteScreen.dart';
 import 'package:chitchat/screen/homescreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
@@ -15,15 +15,15 @@ import 'package:chitchat/models/chatuser.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
-class StatusWidget extends StatefulWidget {
+class StatusScreen extends StatefulWidget {
   final ChatUser user;
-  const StatusWidget({super.key, required this.user});
+  const StatusScreen({super.key, required this.user});
 
   @override
-  State<StatusWidget> createState() => _StatusWidgetState();
+  State<StatusScreen> createState() => _StatusScreenState();
 }
 
-class _StatusWidgetState extends State<StatusWidget> {
+class _StatusScreenState extends State<StatusScreen> {
   void initState() {
     apis.getSelfInfo();
   }
@@ -99,9 +99,7 @@ class _StatusWidgetState extends State<StatusWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => ProfileScreen(
-                                    user: apis.me,
-                                  )));
+                              builder: (_) => ProfileScreen(user: apis.me)));
                     },
                     icon: const Icon(Icons.more_vert)),
               ]),
@@ -265,12 +263,12 @@ class _StatusWidgetState extends State<StatusWidget> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => StatusWidget(user: apis.me)));
+                        builder: (_) => StatusScreen(user: apis.me)));
 
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => StatusWidget(user: apis.me)));
+                        builder: (_) => StatusScreen(user: apis.me)));
               }
               if (Index == 0) {
                 Navigator.pushReplacement(context,
@@ -314,8 +312,10 @@ class _StatusWidgetState extends State<StatusWidget> {
                     fixedSize: Size(mq.width * .3, mq.height * .15),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => StatusNote()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StatusNote(user: apis.me)));
                   },
                   child: Image.asset("img/note.png"),
                 ),
@@ -334,7 +334,11 @@ class _StatusWidgetState extends State<StatusWidget> {
                       setState(() {
                         _image = image.path;
                       });
-                      apis.updateProfilePicture(File(_image!));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  StatusPicture(user: apis.me)));
                       Navigator.pop(context);
                     }
                   },
@@ -355,7 +359,11 @@ class _StatusWidgetState extends State<StatusWidget> {
                       setState(() {
                         _image = image.path;
                       });
-                      apis.updateProfilePicture(File(_image!));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  StatusPicture(user: apis.me)));
                       Navigator.pop(context);
                     }
                   },
