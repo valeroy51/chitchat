@@ -37,7 +37,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       _list.removeWhere((element) => element.Id == user.Id);
       _searchList.removeWhere((element) => element.Id == user.Id);
     });
-    apis.unarchiveChat(user.Id);
+    apis.unarchiveChat(widget.userId, user.Id);
   }
 
   @override
@@ -76,7 +76,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
           ],
         ),
         body: StreamBuilder(
-          stream: apis.getMyUsersId(),
+          stream: apis.getUserArchive(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -84,9 +84,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 return const Center(child: CircularProgressIndicator());
               case ConnectionState.active:
               case ConnectionState.done:
+                final userIds =
+                    snapshot.data?.docs.map((e) => e.id).toList() ?? [];
                 return StreamBuilder(
-                  stream: apis.getAllUsers(
-                      snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                  stream: apis.getAllUsers(userIds),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -99,28 +100,28 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                                 ?.map((e) => ChatUser.fromJson(e.data()))
                                 .toList() ??
                             [];
-                        _list = _list
-                            .where((user) => user.isArchived)
-                            .toList(); // Filter users that are archived
-
-                        if (_list.isNotEmpty) {
+                        // Filter pengguna yang tidak diarsipkan
+                        final filteredUserList =
+                            _list.where((user) => !user.isArchived).toList();
+                        if (filteredUserList.isNotEmpty) {
                           return ListView.builder(
                               itemCount: _isSearching
                                   ? _searchList.length
-                                  : _list.length,
+                                  : filteredUserList.length,
                               padding: EdgeInsets.only(top: mq.height * .001),
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return ChatUserCard(
-                                    user: _isSearching
-                                        ? _searchList[index]
-                                        : _list[index],
-                                    onArchive:
-                                        _unarchiveChat); // Set callback onArchive
+                                  user: _isSearching
+                                      ? _searchList[index]
+                                      : filteredUserList[index],
+                                  onArchive: _removeArchivedUser,
+                                  isArchivedScreen: true,
+                                );
                               });
                         } else {
                           return const Center(
-                            child: Text('No archived chats found',
+                            child: Text('Anda belum melakukan archive',
                                 style: TextStyle(fontSize: 20)),
                           );
                         }

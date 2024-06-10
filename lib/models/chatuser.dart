@@ -11,6 +11,7 @@ class ChatUser {
     required this.About,
     this.isArchived = false,
     this.chatsDeleted = false, // Properti baru untuk status arsip
+    this.isBlocked = false, // Properti baru untuk status blokir
   });
 
   late String Email;
@@ -24,6 +25,7 @@ class ChatUser {
   late String About;
   late bool isArchived; // Properti baru untuk status arsip
   late bool chatsDeleted;
+  late bool isBlocked; // Properti baru untuk status blokir
 
   ChatUser.fromJson(Map<String, dynamic> json) {
     Email = json['Email'] ?? '';
@@ -37,6 +39,7 @@ class ChatUser {
     About = json['About'] ?? '';
     isArchived = json['isArchived'] ?? false; // Handle properti arsip
     chatsDeleted = json['chatsDeleted'] ?? false;
+    isBlocked = json['isBlocked'] ?? false; // Handle properti blokir
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +55,7 @@ class ChatUser {
     data['About'] = About;
     data['isArchived'] = isArchived; // Sertakan properti arsip
     data['chatsDeleted'] = chatsDeleted;
+    data['isBlocked'] = isBlocked; // Sertakan properti blokir
     return data;
   }
 }
