@@ -108,18 +108,22 @@ class apis {
           .where('Email', isEqualTo: email)
           .get();
 
-      if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
-        // Assign the userId from the query result
-        String userId = data.docs.first.id;
+      log('Data: ${data.docs}');
 
+      if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+        log('user exists: ${data.docs.first.data()}');
+// Assign the userId from the query result
+        String userId = data.docs.first.id;
+        // Mengatur nilai isArchived ke false saat menambahkan pengguna ke daftar kontak
         firestore
             .collection('Users')
             .doc(user.uid)
             .collection('my_users')
             .doc(userId)
-            .set({});
-
-        // Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
+            .set({
+          'isArchived': false, // Atur nilai isArchived ke false
+        });
+// Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
         final userAdd =
             FirebaseFirestore.instance.collection('Users').doc(userId);
 
@@ -178,6 +182,7 @@ class apis {
         .collection('Users')
         .doc(user.uid)
         .collection('my_users')
+        .where('isArchived', isEqualTo: false)
         .snapshots();
   }
 
@@ -208,12 +213,12 @@ class apis {
     });
   }
 
-  static Stream<QuerySnapshot> getArchivedChats(String userId) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserArchive() {
     return firestore
-        .collection('chats')
+        .collection('Users')
+        .doc(user.uid)
+        .collection('my_users')
         .where('isArchived', isEqualTo: true)
-        .where('my_users',
-            arrayContains: userId) // Assuming userId is in participants array
         .snapshots();
   }
 
@@ -235,10 +240,6 @@ class apis {
         .doc(user.uid)
         .update({'Image': me.Image});
   }
-
-  static Future<void> addStatus() async {}
-
-  static Future<void> addStatusNote() async {}
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {
@@ -391,32 +392,6 @@ class apis {
     }
   }
 
-  static Future<void> blockUser(String userId, String blockedUserId) async {
-    try {
-      await firestore
-          .collection('Users')
-          .doc(userId)
-          .collection('my_users')
-          .doc(blockedUserId)
-          .update({'isBlocked': true});
-    } catch (e) {
-      print('Error blocking user: $e');
-    }
-  }
-
-  static Future<void> unblockUser(String userId, String blockedUserId) async {
-    try {
-      await firestore
-          .collection('Users')
-          .doc(userId)
-          .collection('my_users')
-          .doc(blockedUserId)
-          .update({'isBlocked': false});
-    } catch (e) {
-      print('Error unblocking user: $e');
-    }
-  }
-
   static Future<void> deleteChatFromMainPage(String userId) async {
     try {
       log('Attempting to delete chats for user ID: $userId');
@@ -446,12 +421,29 @@ class apis {
     }
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserArchive() {
-    return firestore
-        .collection('Users')
-        .doc(user.uid)
-        .collection('my_users')
-        .where('isArchived', isEqualTo: true)
-        .snapshots();
+  static Future<void> blockUser(String userId, String blockedUserId) async {
+    try {
+      await firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(blockedUserId)
+          .update({'isBlocked': true});
+    } catch (e) {
+      print('Error blocking user: $e');
+    }
+  }
+
+  static Future<void> unblockUser(String userId, String blockedUserId) async {
+    try {
+      await firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(blockedUserId)
+          .update({'isBlocked': false});
+    } catch (e) {
+      print('Error unblocking user: $e');
+    }
   }
 }
