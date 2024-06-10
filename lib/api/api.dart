@@ -6,9 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-import '../models/chatuser.dart';
-import '../models/Message.dart';
-
+import 'package:chitchat/models/Message.dart';
+import 'package:chitchat/models/chatuser.dart';
 class apis {
   final String? uid;
   apis({this.uid});
