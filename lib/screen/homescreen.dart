@@ -21,6 +21,7 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
+   GlobalKey<_homeScreenState> homeScreenKey = GlobalKey<_homeScreenState>();
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
