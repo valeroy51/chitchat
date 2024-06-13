@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
+
 class apis {
   final String? uid;
   apis({this.uid});
@@ -29,6 +30,7 @@ class apis {
 
   static User get user => auth.currentUser!;
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+
   static Future<void> getFirebaseMessagingToken() async {
     await fMessaging.requestPermission();
 
@@ -62,14 +64,13 @@ class apis {
           "Data": "User ID : ${me.Id}",
         },
       };
-      var response =
-          await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-              headers: {
-                HttpHeaders.contentTypeHeader: 'application/json',
-                HttpHeaders.authorizationHeader:
-                    'key = AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
-              },
-              body: jsonEncode(body));
+      var response = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader:
+                'key = AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
+          },
+          body: jsonEncode(body));
       log('Response status: ${response.statusCode}');
       log('Response body: ${response.body}');
     } catch (e) {
@@ -420,7 +421,8 @@ class apis {
     }
   }
 
-  static Future<void> blockUser(String userId, String blockedUserId) async {
+
+ static Future<void> blockUser(String userId, String blockedUserId) async {
     try {
       await firestore
           .collection('Users')
@@ -428,11 +430,14 @@ class apis {
           .collection('my_users')
           .doc(blockedUserId)
           .update({'isBlocked': true});
+      print('User $blockedUserId has been blocked by $userId.');
     } catch (e) {
       print('Error blocking user: $e');
+      // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
   }
 
+  // Method untuk membuka blokir pengguna
   static Future<void> unblockUser(String userId, String blockedUserId) async {
     try {
       await firestore
@@ -441,8 +446,14 @@ class apis {
           .collection('my_users')
           .doc(blockedUserId)
           .update({'isBlocked': false});
+      print('User $blockedUserId has been unblocked by $userId.');
     } catch (e) {
       print('Error unblocking user: $e');
+      // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
+  }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream(String userId) {
+    return firestore.collection('Users').doc(userId).snapshots();
   }
 }

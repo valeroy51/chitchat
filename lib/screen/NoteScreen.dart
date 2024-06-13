@@ -16,7 +16,7 @@ class NoteScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppStyle.mainColor,
       appBar: AppBar(
-        title: Text('Note ${user.Name ?? "Unknown User"}'),
+        title: Text('Notes of ${user.Name}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,8 +38,10 @@ class NoteScreen extends StatelessWidget {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection("Notes").snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection("Notes")
+                    .where('user_id', isEqualTo: user.Id)
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -62,8 +64,7 @@ class NoteScreen extends StatelessWidget {
                   }
 
                   return GridView(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
                     children: snapshot.data!.docs
@@ -88,7 +89,7 @@ class NoteScreen extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const NoteEditorScreen()));
+                  builder: (context) => NoteEditorScreen()));
         },
         label: const Text("Add Note"),
         icon: const Icon(Icons.add),

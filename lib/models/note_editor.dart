@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:chitchat/helper/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Tambahkan ini untuk mengakses userId
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key});
@@ -15,6 +16,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   String date = DateTime.now().toString();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _mainController = TextEditingController();
+  final userId = FirebaseAuth.instance.currentUser?.uid; // Ambil userId dari FirebaseAuth
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               "note_title": _titleController.text,
               "creation_date": date,
               "note_content": _mainController.text,
-              "color_id": color_id
+              "color_id": color_id,
+              "user_id": userId // Tambahkan userId ke dalam catatan
             }).then((value) {
               print(value.id);
               Navigator.pop(context);

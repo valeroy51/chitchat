@@ -8,6 +8,7 @@ import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/screen/chatscreen.dart';
 import 'package:chitchat/widget/dialog/profiledialog.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -27,6 +28,33 @@ class ChatUserCard extends StatefulWidget {
 
 class _ChatUserCardState extends State<ChatUserCard> {
   Messages? _message;
+  bool _isBlocked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBlockStatus();
+  }
+
+Future<void> _loadBlockStatus() async {
+  bool isBlocked = await _getBlockStatus(widget.user.Id);
+  if (mounted) {
+    setState(() {
+      _isBlocked = isBlocked;
+    });
+  }
+}
+
+
+  Future<void> _saveBlockStatus(String userId, bool isBlocked) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('blocked_$userId', isBlocked);
+  }
+
+  Future<bool> _getBlockStatus(String userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('blocked_$userId') ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +65,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
         onTap: () {
-          if (!widget.user.isBlocked) {
+          if (!_isBlocked) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => chatScreen(user: widget.user)),
@@ -56,7 +84,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
             if (list.isNotEmpty) {
               _message = list[0];
             }
-            if (widget.user.isBlocked) {
+            if (_isBlocked) {
               return _blockedUserTile();
             } else {
               return _normalUserTile();
@@ -76,15 +104,36 @@ class _ChatUserCardState extends State<ChatUserCard> {
             builder: (_) => ProfileDialog(user: widget.user),
           );
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(mq.height * .3),
-          child: CachedNetworkImage(
-            width: mq.height * .055,
-            height: mq.height * .055,
-            imageUrl: widget.user.Image,
-            errorWidget: (context, url, error) =>
-                const CircleAvatar(child: Icon(CupertinoIcons.person)),
-          ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(mq.height * .3),
+              child: CachedNetworkImage(
+                width: mq.height * .055,
+                height: mq.height * .055,
+                imageUrl: widget.user.Image,
+                errorWidget: (context, url, error) =>
+                    const CircleAvatar(child: Icon(CupertinoIcons.person)),
+              ),
+            ),
+            if (widget.user.IsOnline)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 43, 144, 47),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
       title: Text(widget.user.Name),
@@ -99,14 +148,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
       trailing: _message == null
           ? null
           : _message!.read.isEmpty && _message!.fromId != apis.user.uid
-              ? Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.lightGreenAccent.shade400,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                )
+              ? Container()
               : Text(
                   MyDateUtil.getLastMessageTime(
                       context: context, time: _message!.sent),
@@ -124,15 +166,35 @@ class _ChatUserCardState extends State<ChatUserCard> {
             builder: (_) => ProfileDialog(user: widget.user),
           );
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(mq.height * .3),
-          child: CachedNetworkImage(
-            width: mq.height * .055,
-            height: mq.height * .055,
-            imageUrl: widget.user.Image,
-            errorWidget: (context, url, error) =>
-                const CircleAvatar(child: Icon(CupertinoIcons.person)),
-          ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(mq.height * .3),
+              child: CachedNetworkImage(
+                width: mq.height * .055,
+                height: mq.height * .055,
+                imageUrl: widget.user.Image,
+                errorWidget: (context, url, error) =>
+                    const CircleAvatar(child: Icon(CupertinoIcons.person)),
+              ),
+            ),
+            if (widget.user.IsOnline)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 43, 144, 47),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    )),
+                ),
+              ),
+          ],
         ),
       ),
       title: Text(widget.user.Name),
@@ -193,12 +255,12 @@ class _ChatUserCardState extends State<ChatUserCard> {
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               leading: const Icon(Icons.block, size: 30),
               title: Text(
-                widget.user.isBlocked ? 'Unblock Contact' : 'Block Contact',
+                _isBlocked ? 'Unblock Contact' : 'Block Contact',
                 style: const TextStyle(fontSize: 18),
               ),
               onTap: () async {
                 Navigator.pop(context);
-                if (widget.user.isBlocked) {
+                if (_isBlocked) {
                   // Tampilkan dialog konfirmasi sebelum unblock
                   _showConfirmationDialog(widget.user);
                 } else {
@@ -218,20 +280,17 @@ class _ChatUserCardState extends State<ChatUserCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:
-              Text(widget.user.isBlocked ? 'Unblock Contact' : 'Block Contact'),
+          title: Text(_isBlocked ? 'Unblock Contact' : 'Block Contact'),
           content: Text(
-              'Are you sure you want to ${widget.user.isBlocked ? 'unblock' : 'block'} ${widget.user.Name}?'),
+              'Are you sure you want to ${_isBlocked ? 'unblock' : 'block'} ${widget.user.Name}?'),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // Tutup dialog
-                if (widget.user.isBlocked) {
-                  await _unblockUser(
-                      user); // Unblock pengguna setelah dialog ditutup
+                if (_isBlocked) {
+                  await _unblockUser(user); // Unblock pengguna setelah dialog ditutup
                 } else {
-                  await _blockUser(
-                      user); // Block pengguna setelah dialog ditutup
+                  await _blockUser(user); // Block pengguna setelah dialog ditutup
                 }
               },
               child: Text('Yes'),
@@ -248,25 +307,38 @@ class _ChatUserCardState extends State<ChatUserCard> {
     );
   }
 
-  Future<void> _blockUser(ChatUser user) async {
-    try {
-      await apis.blockUser(apis.auth.currentUser!.uid, user.Id);
+Future<void> _blockUser(ChatUser user) async {
+  try {
+    await _saveBlockStatus(widget.user.Id, true);
+    await apis.blockUser(apis.user.uid, widget.user.Id);
+    // Perbarui status blokir pengguna di database dan shared preferences
+    
+    if (mounted) {
       setState(() {
-        widget.user.isBlocked = true;
+        _isBlocked = true; // Update local state
       });
-    } catch (error) {
-      print('Error blocking user: $error');
     }
+    
+  } catch (error) {
+    print('Error blocking user: $error');
   }
+}
 
-  Future<void> _unblockUser(ChatUser user) async {
-    try {
-      await apis.unblockUser(apis.auth.currentUser!.uid, user.Id);
+Future<void> _unblockUser(ChatUser user) async {
+  try {
+     await _saveBlockStatus(widget.user.Id, false);
+    await apis.unblockUser(apis.user.uid, widget.user.Id);
+    // Hapus status blokir pengguna dari database dan shared preferences
+   
+    if (mounted) {
       setState(() {
-        widget.user.isBlocked = false;
+        _isBlocked = false; // Update local state
       });
-    } catch (error) {
-      print('Error unblocking user: $error');
     }
+  } catch (error) {
+    print('Error unblocking user: $error');
   }
+}
+
+
 }
