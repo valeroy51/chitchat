@@ -392,34 +392,6 @@ class apis {
     }
   }
 
-  static Future<void> deleteChatFromMainPage(String userId) async {
-    try {
-      log('Attempting to delete chats for user ID: $userId');
-
-      // Referensi ke subkoleksi 'Chats' pengguna
-      final userChatRef = FirebaseFirestore.instance
-          .collection('Users')
-          .doc(userId)
-          .collection('Chats');
-
-      // Dapatkan semua dokumen di subkoleksi 'Chats'
-      final chatDocs = await userChatRef.get();
-
-      // Loop melalui setiap dokumen dan hapus satu per satu
-      for (var doc in chatDocs.docs) {
-        await userChatRef.doc(doc.id).delete();
-      }
-
-      // Update dokumen pengguna untuk menandai bahwa chats telah dihapus
-      final userDocRef =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
-      await userDocRef.update({'chatsDeleted': true});
-
-      log('Successfully deleted all chats and updated user for ID: $userId');
-    } catch (e) {
-      log('Error deleting chats: $e');
-    }
-  }
 
 
  static Future<void> blockUser(String userId, String blockedUserId) async {
@@ -456,4 +428,37 @@ class apis {
   static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream(String userId) {
     return firestore.collection('Users').doc(userId).snapshots();
   }
+
+ static Future<void> deleteConversation(String otherUserId) async {
+    try {
+      // Get the conversation ID
+      String conversationId = getConversationID(otherUserId);
+
+      // Reference to the messages subcollection
+      final messagesRef = firestore.collection('Chats/$conversationId/Messages');
+
+      // Get all messages in the conversation
+      final messagesSnapshot = await messagesRef.get();
+
+      // Iterate through each message and delete it
+      for (var doc in messagesSnapshot.docs) {
+        Messages message = Messages.fromJson(doc.data());
+        await firestore
+            .collection('Chats/$conversationId/Messages')
+            .doc(message.sent)
+            .delete();
+
+        // If the message is an image, delete it from Firebase Storage
+        if (message.type == Type.image) {
+          await storage.refFromURL(message.msg).delete();
+        }
+      }
+
+      log('Successfully deleted all messages in the conversation with ID: $conversationId.');
+    } catch (e) {
+      log('Error deleting conversation: $e');
+    }
+  }
+
+
 }
