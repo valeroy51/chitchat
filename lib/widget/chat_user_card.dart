@@ -245,7 +245,7 @@ Future<void> _loadBlockStatus() async {
             onTap: () async {
               Navigator.pop(context);
               // Panggil fungsi untuk menghapus chat dari halaman utama
-              await apis.deleteChatFromMainPage(widget.user.Id);
+                 await apis.deleteConversation(widget.user.Id);
             },
           ),
           Container(
