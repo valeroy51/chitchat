@@ -18,9 +18,9 @@ class AppStyle {
 
   static List<TextStyle> family = [
     const TextStyle(fontFamily: 'Roboto'),
-    const TextStyle(fontFamily: 'Montserrat'),
+    // const TextStyle(fontFamily: 'Montserrat'),
     const TextStyle(fontFamily: 'Noto Serif'),
-    const TextStyle(fontFamily: 'Raleway'),
+    // const TextStyle(fontFamily: 'Raleway'),
     const TextStyle(fontFamily: 'Recursive'),
   ];
 
