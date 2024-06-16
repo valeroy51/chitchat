@@ -106,46 +106,62 @@ class apis {
   }
 
   static Future<bool> addChatUser(String email) async {
-    try {
-      final data = await firestore
+  try {
+    // Mendapatkan data pengguna berdasarkan email
+    final data = await firestore
+        .collection('Users')
+        .where('Email', isEqualTo: email)
+        .get();
+
+    log('Data: ${data.docs}');
+
+    // Memeriksa apakah pengguna ditemukan dan bukan pengguna saat ini
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      log('User exists: ${data.docs.first.data()}');
+
+      // Mendapatkan userId dari hasil query
+      String userId = data.docs.first.id;
+
+      // Mengatur nilai isArchived ke false saat menambahkan pengguna ke daftar kontak
+      firestore
           .collection('Users')
-          .where('Email', isEqualTo: email)
-          .get();
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(userId)
+          .set({
+        'isArchived': false, // Atur nilai isArchived ke false
+      });
 
-      log('Data: ${data.docs}');
+      // Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
+      final userAdd = FirebaseFirestore.instance.collection('Users').doc(userId);
 
-      if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
-        log('user exists: ${data.docs.first.data()}');
-// Assign the userId from the query result
-        String userId = data.docs.first.id;
-        // Mengatur nilai isArchived ke false saat menambahkan pengguna ke daftar kontak
-        firestore
-            .collection('Users')
-            .doc(user.uid)
-            .collection('my_users')
-            .doc(userId)
-            .set({
-          'isArchived': false, // Atur nilai isArchived ke false
-        });
-// Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
-        final userAdd =
-            FirebaseFirestore.instance.collection('Users').doc(userId);
+      await userAdd.update({
+        'chatsDeleted': false,
+      });
 
-        await userAdd.update({
-          'chatsDeleted': false,
-        });
+      // Menambahkan pengguna saat ini ke kontak pengguna yang ditambahkan
+      firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .doc(user.uid)
+          .set({
+        'isArchived': false, // Atur nilai isArchived ke false
+      });
 
-        log('User with email $email has been added and chatsDeleted set to false.');
-        return true;
-      } else {
-        log('User with email $email does not exist or is the current user.');
-        return false;
-      }
-    } catch (e) {
-      log('Error adding user: $e');
+      log('User with email $email has been added and chatsDeleted set to false.');
+
+      return true;
+    } else {
+      log('User with email $email does not exist or is the current user.');
       return false;
     }
+  } catch (e) {
+    log('Error adding user: $e');
+    return false;
   }
+}
+
 
   static Future<void> getSelfInfo() async {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
