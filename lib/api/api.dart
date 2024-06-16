@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:chitchat/models/statusPicture.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:chitchat/models/Message.dart';
 import 'package:chitchat/models/chatuser.dart';
@@ -64,13 +67,14 @@ class apis {
           "Data": "User ID : ${me.Id}",
         },
       };
-      var response = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader:
-                'key = AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
-          },
-          body: jsonEncode(body));
+      var response =
+          await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key = AAAAwoCwmFo:APA91bHanLhFFsNpOJMi78whHdQJus7MGF_-7SIn1uTG9AvnQcuSYbWT4r77Bjhup8Kc69pap3yif4N_PdEg4zghGKA9IwoT7Noo4c__ZQQ65RHa6d3P-bTa5mcebKKrJ39Q0RKIJnCD'
+              },
+              body: jsonEncode(body));
       log('Response status: ${response.statusCode}');
       log('Response body: ${response.body}');
     } catch (e) {
@@ -156,6 +160,34 @@ class apis {
       }
     });
   }
+
+  static Future<void> getContactInfo() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> userSnapshot = await firestore
+          .collection('Users')
+          .doc(user.uid)
+          .collection('my_users')
+          .get();
+
+      List<String> userIds = userSnapshot.docs.map((doc) => doc.id).toList();
+      log('User IDs: $userIds');
+
+      // Now you have the list of user IDs from my_users collection
+      // You can use this list as needed, such as fetching user details or other operations
+    } catch (e) {
+      log('Error getting contact info: $e');
+    }
+  }
+
+//  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
+//       List<String> userIds) {
+//     log('\nUserIds: $userIds');
+
+//     return firestore
+//         .collection('Users')
+//         .where('Id', whereIn: userIds.isEmpty ? [''] : userIds)
+//         .snapshots();
+//   }
 
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -327,6 +359,185 @@ class apis {
     await sendMessage(chatUser, imageUrl, Type.image);
   }
 
+  static Future<void> sendStatusImage(
+      ChatUser chatUser, File file, BuildContext context) async {
+    String date = DateTime.now().toString();
+
+    final ext = file.path.split('.').last;
+
+    final ref = storage.ref().child(
+        'Images/${getConversationID(chatUser.Id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'Image/$ext'))
+        .then((p0) {
+      log('Data Transferred: ${p0.bytesTransferred / 100000} kb');
+    });
+
+    final imageUrl = await ref.getDownloadURL();
+    log(imageUrl);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StatusPicture(
+          user: apis.me,
+          imageUrl: imageUrl,
+        ),
+      ),
+    );
+  }
+
+  // static Future<void> sendingStatusImage(
+  //     ChatUser user, String path, BuildContext context) async {
+  //   String date = DateTime.now().toString();
+
+  //   await FirebaseFirestore.instance
+  //       .collection("Status")
+  //       .doc(user.Id)
+  //       .collection('my_status')
+  //       .add({
+  //     "user": user.Id,
+  //     "create_date": date,
+  //     "status_text": "",
+  //     "image_path": path,
+  //     "color_id": "",
+  //     "family_id": ""
+  //   }).then((value) {
+  //     print(value.id);
+  //     Navigator.pop(context);
+  //   }).catchError((error) => print("Failed to add new note due to $error"));
+  // }
+
+  // static Future<void> sendingStatusNote(ChatUser user, String text, int color,
+  //     int family, BuildContext context) async {
+  //   String date = DateTime.now().toString();
+
+  //   await FirebaseFirestore.instance
+  //       .collection("Status")
+  //       .doc(user.Id)
+  //       .collection('my_status')
+  //       .add({
+  //     "user": user.Id,
+  //     "create_date": date,
+  //     "status_text": text,
+  //     "image_path": "",
+  //     "color_id": color,
+  //     "family_id": family,
+  //   }).then((value) {
+  //     print(value.id);
+  //     Navigator.pop(context);
+  //   }).catchError((error) => print("Failed to add new note due to $error"));
+  // }
+
+  static Future<void> sendingStatusImage(
+      ChatUser user, String path, BuildContext context) async {
+    String date = DateTime.now().toString();
+
+    try {
+      // Menambahkan story ke koleksi my_status pengguna
+      final storyRef = await firestore
+          .collection("Status")
+          .doc(user.Id)
+          .collection('my_status')
+          .add({
+        "user": user.Id,
+        "create_date": date,
+        "status_text": "",
+        "image_path": path,
+        "color_id": "",
+        "family_id": ""
+      });
+
+      // Mendapatkan semua pengguna yang memiliki user di daftar kontak mereka
+      final contactUsersSnapshot = await firestore
+          .collection('Users')
+          .doc(user.Id)
+          .collection('my_users')
+          .where('isArchived', isEqualTo: false)
+          .get();
+
+      // Menambahkan referensi story ke kontak pengguna
+      for (var contactUser in contactUsersSnapshot.docs) {
+        await firestore
+            .collection('Users')
+            .doc(contactUser.id)
+            .collection('contact_status')
+            .doc(storyRef.id)
+            .set({
+          'storyId': storyRef.id,
+          'userId': user.Id,
+          'create_date': date,
+          'image_path': path,
+          'status_text': "",
+        });
+      }
+
+      print("Story added successfully");
+      Navigator.pop(context);
+    } catch (error) {
+      print("Failed to add story due to $error");
+    }
+  }
+
+  static Future<void> sendingStatusNote(ChatUser user, String text, int color,
+      int family, BuildContext context) async {
+    String date = DateTime.now().toString();
+
+    try {
+      // Menambahkan story ke koleksi my_status pengguna
+      final storyRef = await firestore
+          .collection("Status")
+          .doc(user.Id)
+          .collection('my_status')
+          .add({
+        "user": user.Id,
+        "create_date": date,
+        "status_text": text,
+        "image_path": "",
+        "color_id": color,
+        "family_id": family,
+      });
+
+      // Mendapatkan semua pengguna yang memiliki user di daftar kontak mereka
+      final contactUsersSnapshot = await firestore
+          .collection('Users')
+          .doc(user.Id)
+          .collection('my_users')
+          .where('isArchived', isEqualTo: false)
+          .get();
+
+      // Menambahkan referensi story ke kontak pengguna
+      for (var contactUser in contactUsersSnapshot.docs) {
+        await firestore
+            .collection('Users')
+            .doc(contactUser.id)
+            .collection('contact_status')
+            .doc(storyRef.id)
+            .set({
+          'storyId': storyRef.id,
+          'userId': user.Id,
+          'create_date': date,
+          'status_text': text,
+          'image_path': "",
+        });
+      }
+
+      print("Story added successfully");
+      Navigator.pop(context);
+    } catch (error) {
+      print("Failed to add story due to $error");
+    }
+  }
+
+  static Stream<QuerySnapshot> getStatusUpdates() {
+    return firestore
+        .collection('Status')
+        .doc(user.uid)
+        .collection('my_status')
+        .orderBy('create_date', descending: true)
+        .snapshots();
+  }
+
   static Future<void> deleteMessage(Messages messages) async {
     await firestore
         .collection('Chats/${getConversationID(messages.told)}/Messages/')
@@ -392,9 +603,7 @@ class apis {
     }
   }
 
-
-
- static Future<void> blockUser(String userId, String blockedUserId) async {
+  static Future<void> blockUser(String userId, String blockedUserId) async {
     try {
       await firestore
           .collection('Users')
@@ -425,17 +634,19 @@ class apis {
     }
   }
 
-  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream(String userId) {
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream(
+      String userId) {
     return firestore.collection('Users').doc(userId).snapshots();
   }
 
- static Future<void> deleteConversation(String otherUserId) async {
+  static Future<void> deleteConversation(String otherUserId) async {
     try {
       // Get the conversation ID
       String conversationId = getConversationID(otherUserId);
 
       // Reference to the messages subcollection
-      final messagesRef = firestore.collection('Chats/$conversationId/Messages');
+      final messagesRef =
+          firestore.collection('Chats/$conversationId/Messages');
 
       // Get all messages in the conversation
       final messagesSnapshot = await messagesRef.get();
@@ -459,6 +670,4 @@ class apis {
       log('Error deleting conversation: $e');
     }
   }
-
-
 }

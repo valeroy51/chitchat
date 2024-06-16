@@ -4,8 +4,8 @@ import 'package:chitchat/api/api.dart';
 import 'package:chitchat/helper/style.dart';
 import 'package:chitchat/main.dart';
 import 'package:chitchat/models/chatuser.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StatusNote extends StatefulWidget {
@@ -44,6 +44,13 @@ class _StatusNoteState extends State<StatusNote> {
     return Scaffold(
       backgroundColor: AppStyle.cardsColor[color_id],
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          child: const Icon(CupertinoIcons.arrow_left),
+        ),
         backgroundColor: AppStyle.cardsColor[color_id],
         elevation: 0.0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -104,20 +111,11 @@ class _StatusNoteState extends State<StatusNote> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppStyle.bgColor,
-        onPressed: () {
+        onPressed: () async {
           {
-            FirebaseFirestore.instance.collection("Status").add({
-              "user": apis.me.Id,
-              "create_date": date,
-              "status_text": _statusController.text,
-              "image_path": "",
-              "color_id": color_id,
-              "family_id": family_id
-            }).then((value) {
-              print(value.id);
-              Navigator.pop(context);
-            }).catchError(
-                (error) => print("Failed to add new note due to $error"));
+            await apis.sendingStatusNote(
+                apis.me, _statusController.text, color_id, family_id, context);
+                Navigator.pop(context);
           }
         },
         child: const Icon(Icons.send),
