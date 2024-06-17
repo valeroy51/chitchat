@@ -118,14 +118,6 @@ class _homeScreenState extends State<homeScreen> {
               IconButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => ProfileScreen(user: apis.me)));
-                  },
-                  icon: const Icon(Icons.more_vert)),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => const ArchiveScreen(
@@ -135,6 +127,14 @@ class _homeScreenState extends State<homeScreen> {
                     );
                   },
                   icon: const Icon(Icons.archive)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ProfileScreen(user: apis.me)));
+                  },
+                  icon: const Icon(Icons.more_vert)),
             ],
           ),
           floatingActionButton: Padding(

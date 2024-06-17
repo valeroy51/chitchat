@@ -135,7 +135,10 @@ class _ChatUserCardState extends State<ChatUserCard> {
           ],
         ),
       ),
-      title: Text(widget.user.Name),
+      title: Text(
+        widget.user.Name,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Text(
         _message != null
             ? _message!.type == Type.image

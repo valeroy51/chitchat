@@ -1,5 +1,3 @@
-import 'package:chitchat/api/api.dart';
-import 'package:chitchat/models/statusPicture.dart';
 import 'package:chitchat/screen/status/StoryView.dart';
 import 'package:flutter/material.dart';
 import 'package:chitchat/models/chatuser.dart';
