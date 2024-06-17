@@ -16,13 +16,12 @@ class AppStyle {
     Colors.blueGrey.shade100,
   ];
 
-  static List<TextStyle> family = [
-    const TextStyle(fontFamily: 'Roboto'),
-    // const TextStyle(fontFamily: 'Montserrat'),
-    const TextStyle(fontFamily: 'Noto Serif'),
-    // const TextStyle(fontFamily: 'Raleway'),
-    const TextStyle(fontFamily: 'Recursive'),
+  static List<String> family = [
+    'Roboto',
+    'Noto Serif',
+    'Recursive',
   ];
+
 
   // Static text styles
   static TextStyle mainTitle = const TextStyle(
@@ -37,5 +36,5 @@ class AppStyle {
       fontSize: 30.0,
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.normal,
-      fontFamily: family[0].fontFamily);
+      fontFamily: family[0]);
 }

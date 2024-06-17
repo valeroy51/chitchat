@@ -1,7 +1,9 @@
 import 'package:chitchat/api/api.dart';
 import 'package:chitchat/models/statusPicture.dart';
+import 'package:chitchat/screen/status/StoryView.dart';
 import 'package:flutter/material.dart';
 import 'package:chitchat/models/chatuser.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class StatusUpdate extends StatefulWidget {
   final ChatUser user;
@@ -19,14 +21,11 @@ class _StatusUpdateState extends State<StatusUpdate> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => StatusPicture(
-                user: apis.me,
-                imageUrl: apis.me.Image,
-              ),
-            ),
-          );
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => StoryPageView(user: widget.user),
+                    ),
+                  );
         },
         child: Row(
           children: [
@@ -37,8 +36,8 @@ class _StatusUpdateState extends State<StatusUpdate> {
                   border: Border.all(color: Colors.blue, width: 3)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(40),
-                child: Image.asset(
-                  widget.user.Image,
+                child: CachedNetworkImage(
+                  imageUrl:  widget.user.Image,
                   height: 55,
                   width: 55,
                   fit: BoxFit.cover,
