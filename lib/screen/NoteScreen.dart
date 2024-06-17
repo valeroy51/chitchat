@@ -64,7 +64,8 @@ class NoteScreen extends StatelessWidget {
                   }
 
                   return GridView(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
                     children: snapshot.data!.docs
@@ -86,10 +87,8 @@ class NoteScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NoteEditorScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoteEditorScreen()));
         },
         label: const Text("Add Note"),
         icon: const Icon(Icons.add),

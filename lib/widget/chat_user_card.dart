@@ -36,15 +36,14 @@ class _ChatUserCardState extends State<ChatUserCard> {
     _loadBlockStatus();
   }
 
-Future<void> _loadBlockStatus() async {
-  bool isBlocked = await _getBlockStatus(widget.user.Id);
-  if (mounted) {
-    setState(() {
-      _isBlocked = isBlocked;
-    });
+  Future<void> _loadBlockStatus() async {
+    bool isBlocked = await _getBlockStatus(widget.user.Id);
+    if (mounted) {
+      setState(() {
+        _isBlocked = isBlocked;
+      });
+    }
   }
-}
-
 
   Future<void> _saveBlockStatus(String userId, bool isBlocked) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -124,7 +123,7 @@ Future<void> _loadBlockStatus() async {
                   width: 12,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 43, 144, 47),
+                    color: const Color.fromARGB(255, 43, 144, 47),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white,
@@ -186,12 +185,12 @@ Future<void> _loadBlockStatus() async {
                   width: 12,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 43, 144, 47),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    )),
+                      color: const Color.fromARGB(255, 43, 144, 47),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      )),
                 ),
               ),
           ],
@@ -245,7 +244,7 @@ Future<void> _loadBlockStatus() async {
             onTap: () async {
               Navigator.pop(context);
               // Panggil fungsi untuk menghapus chat dari halaman utama
-                 await apis.deleteConversation(widget.user.Id);
+              await apis.deleteConversation(widget.user.Id);
             },
           ),
           Container(
@@ -288,18 +287,20 @@ Future<void> _loadBlockStatus() async {
               onPressed: () async {
                 Navigator.of(context).pop(); // Tutup dialog
                 if (_isBlocked) {
-                  await _unblockUser(user); // Unblock pengguna setelah dialog ditutup
+                  await _unblockUser(
+                      user); // Unblock pengguna setelah dialog ditutup
                 } else {
-                  await _blockUser(user); // Block pengguna setelah dialog ditutup
+                  await _blockUser(
+                      user); // Block pengguna setelah dialog ditutup
                 }
               },
-              child: Text('Yes'),
+              child: const Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Tutup dialog
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );
@@ -307,38 +308,35 @@ Future<void> _loadBlockStatus() async {
     );
   }
 
-Future<void> _blockUser(ChatUser user) async {
-  try {
-    await _saveBlockStatus(widget.user.Id, true);
-    await apis.blockUser(apis.user.uid, widget.user.Id);
-    // Perbarui status blokir pengguna di database dan shared preferences
-    
-    if (mounted) {
-      setState(() {
-        _isBlocked = true; // Update local state
-      });
+  Future<void> _blockUser(ChatUser user) async {
+    try {
+      await _saveBlockStatus(widget.user.Id, true);
+      await apis.blockUser(apis.user.uid, widget.user.Id);
+      // Perbarui status blokir pengguna di database dan shared preferences
+
+      if (mounted) {
+        setState(() {
+          _isBlocked = true; // Update local state
+        });
+      }
+    } catch (error) {
+      print('Error blocking user: $error');
     }
-    
-  } catch (error) {
-    print('Error blocking user: $error');
   }
-}
 
-Future<void> _unblockUser(ChatUser user) async {
-  try {
-     await _saveBlockStatus(widget.user.Id, false);
-    await apis.unblockUser(apis.user.uid, widget.user.Id);
-    // Hapus status blokir pengguna dari database dan shared preferences
-   
-    if (mounted) {
-      setState(() {
-        _isBlocked = false; // Update local state
-      });
+  Future<void> _unblockUser(ChatUser user) async {
+    try {
+      await _saveBlockStatus(widget.user.Id, false);
+      await apis.unblockUser(apis.user.uid, widget.user.Id);
+      // Hapus status blokir pengguna dari database dan shared preferences
+
+      if (mounted) {
+        setState(() {
+          _isBlocked = false; // Update local state
+        });
+      }
+    } catch (error) {
+      print('Error unblocking user: $error');
     }
-  } catch (error) {
-    print('Error unblocking user: $error');
   }
-}
-
-
 }

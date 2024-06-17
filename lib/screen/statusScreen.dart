@@ -9,8 +9,6 @@ import 'package:chitchat/screen/homescreen.dart';
 import 'package:chitchat/screen/profilescreen.dart';
 import 'package:chitchat/screen/status/StoryView.dart';
 import 'package:chitchat/widget/status_update.dart';
-import 'package:chitchat/widget/status_viewed.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chitchat/models/chatuser.dart';
@@ -39,7 +37,7 @@ class _StatusScreenState extends State<StatusScreen> {
   }
 
   Future<void> _loadContactInfo() async {
-    List<ChatUser> contacts = await apis.getContactInfo();
+    List<ChatUser> contacts = await apis.getContactsWithStatus();
     setState(() {
       statusUsers = contacts;
     });
@@ -68,12 +66,14 @@ class _StatusScreenState extends State<StatusScreen> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () { Navigator.push(
+                onTap: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => StoryPageView(user: apis.me),
                     ),
-                  );},
+                  );
+                },
                 child: Container(
                   child: Row(
                     children: [
@@ -133,7 +133,7 @@ class _StatusScreenState extends State<StatusScreen> {
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Updated",
+                  "The Status of Your Friends",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -143,28 +143,9 @@ class _StatusScreenState extends State<StatusScreen> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: statusUsers
-                    .length, // Sesuaikan jumlah item dengan panjang statusUsers
+                itemCount: statusUsers.length,
                 itemBuilder: (context, index) {
                   return StatusUpdate(user: statusUsers[index]);
-                },
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Viewed",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Colors.black.withOpacity(0.6)),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 5, // Adjust the number of items as needed
-                itemBuilder: (context, index) {
-                  return const StatusViewed();
                 },
               ),
             ],

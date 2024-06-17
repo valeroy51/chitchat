@@ -21,7 +21,7 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
-   GlobalKey<_homeScreenState> homeScreenKey = GlobalKey<_homeScreenState>();
+  GlobalKey<_homeScreenState> homeScreenKey = GlobalKey<_homeScreenState>();
   List<ChatUser> _list = [];
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
@@ -299,7 +299,7 @@ class _homeScreenState extends State<homeScreen> {
                           borderRadius: BorderRadius.circular(15)),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ElevatedButton.icon(
                     onPressed: () async {
                       final result = await Navigator.push(
@@ -329,13 +329,13 @@ class _homeScreenState extends State<homeScreen> {
                           false; // Set flag dialog terbuka menjadi false setelah selesai pemindaian QR
                       showDialogAgain(); // Memunculkan dialog lagi setelah pemindaian QR selesai
                     },
-                    icon: Icon(Icons.qr_code_scanner),
-                    label: Text('Scan QR Code'),
+                    icon: const Icon(Icons.qr_code_scanner),
+                    label: const Text('Scan QR Code'),
                   ),
                   if (email.isNotEmpty) ...[
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text('Scanned Email: $email',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
                 ],
@@ -398,13 +398,14 @@ class _homeScreenState extends State<homeScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(user.Name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            Text(user.Email, style: TextStyle(fontSize: 14)),
-            SizedBox(height: 5),
-            Text(user.About, style: TextStyle(fontSize: 14)),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
+            Text(user.Email, style: const TextStyle(fontSize: 14)),
+            const SizedBox(height: 5),
+            Text(user.About, style: const TextStyle(fontSize: 14)),
           ],
         ),
         actions: [

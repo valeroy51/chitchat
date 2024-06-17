@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SystemUiOverlayStyle(statusBarColor: Colors.indigo),
           actions: [
             IconButton(
-              icon: Icon(Icons.qr_code),
+              icon: const Icon(Icons.qr_code),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -173,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: const Icon(Icons.edit),
                     label: const Text("UPDATE"),
                   ),
-                  SizedBox(height: 20)
+                  const SizedBox(height: 20)
                 ],
               ),
             ),

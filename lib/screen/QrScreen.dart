@@ -17,7 +17,7 @@ class QrScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Scan this QR code for other users to add you',
+              'Scan this QR code so other users can add you',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

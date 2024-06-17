@@ -22,7 +22,6 @@ class AppStyle {
     'Recursive',
   ];
 
-
   // Static text styles
   static TextStyle mainTitle = const TextStyle(
       fontSize: 18.0, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold);
