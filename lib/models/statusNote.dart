@@ -23,7 +23,9 @@ class _StatusNoteState extends State<StatusNote> {
   final TextEditingController _statusController = TextEditingController();
   bool _showEmoji = false;
 
+  @override
   void initState() {
+    super.initState();
     apis.getSelfInfo();
   }
 
@@ -115,7 +117,7 @@ class _StatusNoteState extends State<StatusNote> {
           {
             await apis.sendingStatusNote(
                 apis.me, _statusController.text, color_id, family_id, context);
-                Navigator.pop(context);
+            Navigator.pop(context);
           }
         },
         child: const Icon(Icons.send),

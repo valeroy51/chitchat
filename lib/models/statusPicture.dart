@@ -42,10 +42,9 @@ class _StatusPictureState extends State<StatusPicture> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppStyle.bgColor,
-          onPressed: () async {
+        onPressed: () async {
           {
-            await apis.sendingStatusImage(
-                apis.me, widget.imageUrl, context);
+            await apis.sendingStatusImage(apis.me, widget.imageUrl, context);
           }
         },
         child: const Icon(Icons.send),

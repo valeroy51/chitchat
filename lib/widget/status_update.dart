@@ -21,11 +21,11 @@ class _StatusUpdateState extends State<StatusUpdate> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => StoryPageView(user: widget.user),
-                    ),
-                  );
+            context,
+            MaterialPageRoute(
+              builder: (_) => StoryPageView(user: widget.user),
+            ),
+          );
         },
         child: Row(
           children: [
@@ -37,7 +37,7 @@ class _StatusUpdateState extends State<StatusUpdate> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: CachedNetworkImage(
-                  imageUrl:  widget.user.Image,
+                  imageUrl: widget.user.Image,
                   height: 55,
                   width: 55,
                   fit: BoxFit.cover,

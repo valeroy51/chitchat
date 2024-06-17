@@ -1,6 +1,5 @@
 import 'package:chitchat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Cloud Firestore
 import 'package:chitchat/models/chatuser.dart';
 import 'package:chitchat/widget/chat_user_card.dart';
 import 'package:chitchat/api/api.dart';
@@ -22,7 +21,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the Stream of archived chats
   }
 
   void _removeArchivedUser(ChatUser user) {

@@ -35,7 +35,7 @@ class _StoryPageViewState extends State<StoryPageView> {
           return StoryItem.inlineImage(
             url: status['image_path'],
             controller: _controller,
-            imageFit:BoxFit.contain,
+            imageFit: BoxFit.contain,
           );
         } else {
           return StoryItem.text(

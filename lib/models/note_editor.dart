@@ -16,7 +16,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   String date = DateTime.now().toString();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _mainController = TextEditingController();
-  final userId = FirebaseAuth.instance.currentUser?.uid; // Ambil userId dari FirebaseAuth
+  final userId =
+      FirebaseAuth.instance.currentUser?.uid; // Ambil userId dari FirebaseAuth
 
   @override
   Widget build(BuildContext context) {

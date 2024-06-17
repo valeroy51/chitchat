@@ -203,15 +203,76 @@ class apis {
     }
   }
 
-//  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
-//       List<String> userIds) {
-//     log('\nUserIds: $userIds');
+  static Future<List<ChatUser>> getContactsWithStatus() async {
+    try {
+      // Get the IDs of the user's contacts
+      final QuerySnapshot<Map<String, dynamic>> userSnapshot = await firestore
+          .collection('Users')
+          .doc(user.uid)
+          .collection('my_users')
+          .get();
 
-//     return firestore
-//         .collection('Users')
-//         .where('Id', whereIn: userIds.isEmpty ? [''] : userIds)
-//         .snapshots();
-//   }
+      List<String> userIds = userSnapshot.docs.map((doc) => doc.id).toList();
+
+      List<ChatUser> contactUsersWithStatus = [];
+
+      // Iterate through each contact to check if they have status updates
+      for (String userId in userIds) {
+        final QuerySnapshot<Map<String, dynamic>> statusSnapshot =
+            await firestore
+                .collection('Status')
+                .doc(userId)
+                .collection('my_status')
+                .get();
+
+        // If the user has status updates, add them to the contact list
+        if (statusSnapshot.docs.isNotEmpty) {
+          DocumentSnapshot<Map<String, dynamic>> userDoc =
+              await firestore.collection('Users').doc(userId).get();
+          if (userDoc.exists) {
+            contactUsersWithStatus.add(ChatUser.fromJson(userDoc.data()!));
+          }
+        }
+      }
+      return contactUsersWithStatus;
+    } catch (e) {
+      log('Error getting contacts with status: $e');
+      return [];
+    }
+  }
+
+  // Fungsi untuk menghapus status berdasarkan statusId
+  static Future<void> deleteStatus(String userId, String statusId) async {
+    try {
+      // Hapus status dari koleksi my_status
+      await firestore
+          .collection('Status')
+          .doc(userId)
+          .collection('my_status')
+          .doc(statusId)
+          .delete();
+
+      // Hapus referensi status dari koleksi contact_status user
+      final contactUsersSnapshot = await firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('my_users')
+          .get();
+
+      for (var contactUser in contactUsersSnapshot.docs) {
+        await firestore
+            .collection('Users')
+            .doc(contactUser.id)
+            .collection('contact_status')
+            .doc(statusId)
+            .delete();
+      }
+
+      log('Status $statusId deleted successfully.');
+    } catch (e) {
+      log('Error deleting status: $e');
+    }
+  }
 
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -385,8 +446,6 @@ class apis {
 
   static Future<void> sendStatusImage(
       ChatUser chatUser, File file, BuildContext context) async {
-    String date = DateTime.now().toString();
-
     final ext = file.path.split('.').last;
 
     final ref = storage.ref().child(
@@ -411,76 +470,34 @@ class apis {
     );
   }
 
-  // static Future<void> sendingStatusImage(
-  //     ChatUser user, String path, BuildContext context) async {
-  //   String date = DateTime.now().toString();
-
-  //   await FirebaseFirestore.instance
-  //       .collection("Status")
-  //       .doc(user.Id)
-  //       .collection('my_status')
-  //       .add({
-  //     "user": user.Id,
-  //     "create_date": date,
-  //     "status_text": "",
-  //     "image_path": path,
-  //     "color_id": "",
-  //     "family_id": ""
-  //   }).then((value) {
-  //     log(value.id);
-  //     Navigator.pop(context);
-  //   }).catchError((error) => log("Failed to add new note due to $error"));
-  // }
-
-  // static Future<void> sendingStatusNote(ChatUser user, String text, int color,
-  //     int family, BuildContext context) async {
-  //   String date = DateTime.now().toString();
-
-  //   await FirebaseFirestore.instance
-  //       .collection("Status")
-  //       .doc(user.Id)
-  //       .collection('my_status')
-  //       .add({
-  //     "user": user.Id,
-  //     "create_date": date,
-  //     "status_text": text,
-  //     "image_path": "",
-  //     "color_id": color,
-  //     "family_id": family,
-  //   }).then((value) {
-  //     log(value.id);
-  //     Navigator.pop(context);
-  //   }).catchError((error) => log("Failed to add new note due to $error"));
-  // }
   static Future<List<Map<String, dynamic>>> getStatus(ChatUser user) async {
-  List<Map<String, dynamic>> statusList = [];
-  try {
-    log('Fetching status for user: ${user.Id}');
-    
-    final QuerySnapshot<Map<String, dynamic>> statusSnapshot = await firestore
-        .collection('Status')
-        .doc(user.Id)
-        .collection('my_status')
-        .get();
+    List<Map<String, dynamic>> statusList = [];
+    try {
+      log('Fetching status for user: ${user.Id}');
 
-    log('Fetched ${statusSnapshot.docs.length} status documents');
+      final QuerySnapshot<Map<String, dynamic>> statusSnapshot = await firestore
+          .collection('Status')
+          .doc(user.Id)
+          .collection('my_status')
+          .get();
 
-    statusList = statusSnapshot.docs.map((doc) => doc.data()).toList();
+      log('Fetched ${statusSnapshot.docs.length} status documents');
 
-    log('Status List from getStatus: $statusList'); // Tambahkan log ini untuk debugging
-  } catch (e) {
-    log('Error getting status: $e');
+      statusList = statusSnapshot.docs.map((doc) => doc.data()).toList();
+
+      log('Status List from getStatus: $statusList'); // Tambahkan log untuk debugging
+    } catch (e) {
+      log('Error getting status: $e');
+    }
+    return statusList;
   }
-  return statusList;
-}
-
 
   static Future<void> sendingStatusImage(
       ChatUser user, String path, BuildContext context) async {
     String date = DateTime.now().toString();
 
     try {
-      // Menambahkan story ke koleksi my_status pengguna
+      // Menambahkan story ke koleksi my_status
       final storyRef = await firestore
           .collection("Status")
           .doc(user.Id)
@@ -494,7 +511,12 @@ class apis {
         "family_id": ""
       });
 
-      // Mendapatkan semua pengguna yang memiliki user di daftar kontak mereka
+      // Menjadwalkan penghapusan status setelah 24 jam
+      Future.delayed(const Duration(hours: 24), () async {
+        await deleteStatus(user.Id, storyRef.id);
+      });
+
+      // Mendapatkan semua user yang memiliki user di daftar kontak
       final contactUsersSnapshot = await firestore
           .collection('Users')
           .doc(user.Id)
@@ -502,7 +524,7 @@ class apis {
           .where('isArchived', isEqualTo: false)
           .get();
 
-      // Menambahkan referensi story ke kontak pengguna
+      // Menambahkan referensi story ke kontak
       for (var contactUser in contactUsersSnapshot.docs) {
         await firestore
             .collection('Users')
@@ -530,7 +552,7 @@ class apis {
     String date = DateTime.now().toString();
 
     try {
-      // Menambahkan story ke koleksi my_status pengguna
+      // Menambahkan story ke koleksi my_status
       final storyRef = await firestore
           .collection("Status")
           .doc(user.Id)
@@ -544,7 +566,12 @@ class apis {
         "family_id": family,
       });
 
-      // Mendapatkan semua pengguna yang memiliki user di daftar kontak mereka
+      // Menjadwalkan penghapusan status setelah 24 jam
+      Future.delayed(const Duration(hours: 24), () async {
+        await deleteStatus(user.Id, storyRef.id);
+      });
+
+      // Mendapatkan semua user yang memiliki user di daftar kontak
       final contactUsersSnapshot = await firestore
           .collection('Users')
           .doc(user.Id)
@@ -552,7 +579,7 @@ class apis {
           .where('isArchived', isEqualTo: false)
           .get();
 
-      // Menambahkan referensi story ke kontak pengguna
+      // Menambahkan referensi story ke kontak
       for (var contactUser in contactUsersSnapshot.docs) {
         await firestore
             .collection('Users')
@@ -657,11 +684,10 @@ class apis {
       log('User $blockedUserId has been blocked by $userId.');
     } catch (e) {
       log('Error blocking user: $e');
-      // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
   }
 
-  // Method untuk membuka blokir pengguna
+  //fungsi untuk membuka blokir pengguna
   static Future<void> unblockUser(String userId, String blockedUserId) async {
     try {
       await firestore
@@ -673,7 +699,6 @@ class apis {
       log('User $blockedUserId has been unblocked by $userId.');
     } catch (e) {
       log('Error unblocking user: $e');
-      // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
   }
 
@@ -684,17 +709,13 @@ class apis {
 
   static Future<void> deleteConversation(String otherUserId) async {
     try {
-      // Get the conversation ID
       String conversationId = getConversationID(otherUserId);
 
-      // Reference to the messages subcollection
       final messagesRef =
           firestore.collection('Chats/$conversationId/Messages');
 
-      // Get all messages in the conversation
       final messagesSnapshot = await messagesRef.get();
 
-      // Iterate through each message and delete it
       for (var doc in messagesSnapshot.docs) {
         Messages message = Messages.fromJson(doc.data());
         await firestore
@@ -702,7 +723,6 @@ class apis {
             .doc(message.sent)
             .delete();
 
-        // If the message is an image, delete it from Firebase Storage
         if (message.type == Type.image) {
           await storage.refFromURL(message.msg).delete();
         }
