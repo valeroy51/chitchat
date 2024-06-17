@@ -88,7 +88,7 @@ class _StatusNoteState extends State<StatusNote> {
               decoration: const InputDecoration(
                   border: InputBorder.none, hintText: "Type a status"),
               style: AppStyle.statusNote.copyWith(
-                fontFamily: AppStyle.family[family_id].fontFamily,
+                fontFamily: AppStyle.family[family_id],
               ),
               textAlign: TextAlign.center,
             ),

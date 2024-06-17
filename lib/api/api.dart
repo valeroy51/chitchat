@@ -106,62 +106,62 @@ class apis {
   }
 
   static Future<bool> addChatUser(String email) async {
-  try {
-    // Mendapatkan data pengguna berdasarkan email
-    final data = await firestore
-        .collection('Users')
-        .where('Email', isEqualTo: email)
-        .get();
-
-    log('Data: ${data.docs}');
-
-    // Memeriksa apakah pengguna ditemukan dan bukan pengguna saat ini
-    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
-      log('User exists: ${data.docs.first.data()}');
-
-      // Mendapatkan userId dari hasil query
-      String userId = data.docs.first.id;
-
-      // Mengatur nilai isArchived ke false saat menambahkan pengguna ke daftar kontak
-      firestore
+    try {
+      // Mendapatkan data pengguna berdasarkan email
+      final data = await firestore
           .collection('Users')
-          .doc(user.uid)
-          .collection('my_users')
-          .doc(userId)
-          .set({
-        'isArchived': false, // Atur nilai isArchived ke false
-      });
+          .where('Email', isEqualTo: email)
+          .get();
 
-      // Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
-      final userAdd = FirebaseFirestore.instance.collection('Users').doc(userId);
+      log('Data: ${data.docs}');
 
-      await userAdd.update({
-        'chatsDeleted': false,
-      });
+      // Memeriksa apakah pengguna ditemukan dan bukan pengguna saat ini
+      if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+        log('User exists: ${data.docs.first.data()}');
 
-      // Menambahkan pengguna saat ini ke kontak pengguna yang ditambahkan
-      firestore
-          .collection('Users')
-          .doc(userId)
-          .collection('my_users')
-          .doc(user.uid)
-          .set({
-        'isArchived': false, // Atur nilai isArchived ke false
-      });
+        // Mendapatkan userId dari hasil query
+        String userId = data.docs.first.id;
 
-      log('User with email $email has been added and chatsDeleted set to false.');
+        // Mengatur nilai isArchived ke false saat menambahkan pengguna ke daftar kontak
+        firestore
+            .collection('Users')
+            .doc(user.uid)
+            .collection('my_users')
+            .doc(userId)
+            .set({
+          'isArchived': false, // Atur nilai isArchived ke false
+        });
 
-      return true;
-    } else {
-      log('User with email $email does not exist or is the current user.');
+        // Update status 'chatsDeleted' menjadi false untuk pengguna yang ditambahkan kembali
+        final userAdd =
+            FirebaseFirestore.instance.collection('Users').doc(userId);
+
+        await userAdd.update({
+          'chatsDeleted': false,
+        });
+
+        // Menambahkan pengguna saat ini ke kontak pengguna yang ditambahkan
+        firestore
+            .collection('Users')
+            .doc(userId)
+            .collection('my_users')
+            .doc(user.uid)
+            .set({
+          'isArchived': false, // Atur nilai isArchived ke false
+        });
+
+        log('User with email $email has been added and chatsDeleted set to false.');
+
+        return true;
+      } else {
+        log('User with email $email does not exist or is the current user.');
+        return false;
+      }
+    } catch (e) {
+      log('Error adding user: $e');
       return false;
     }
-  } catch (e) {
-    log('Error adding user: $e');
-    return false;
   }
-}
-
 
   static Future<void> getSelfInfo() async {
     await firestore.collection('Users').doc(user.uid).get().then((user) async {
@@ -177,7 +177,7 @@ class apis {
     });
   }
 
-  static Future<void> getContactInfo() async {
+  static Future<List<ChatUser>> getContactInfo() async {
     try {
       final QuerySnapshot<Map<String, dynamic>> userSnapshot = await firestore
           .collection('Users')
@@ -188,10 +188,18 @@ class apis {
       List<String> userIds = userSnapshot.docs.map((doc) => doc.id).toList();
       log('User IDs: $userIds');
 
-      // Now you have the list of user IDs from my_users collection
-      // You can use this list as needed, such as fetching user details or other operations
+      List<ChatUser> contactUsers = [];
+      for (String userId in userIds) {
+        DocumentSnapshot<Map<String, dynamic>> userDoc =
+            await firestore.collection('Users').doc(userId).get();
+        if (userDoc.exists) {
+          contactUsers.add(ChatUser.fromJson(userDoc.data()!));
+        }
+      }
+      return contactUsers;
     } catch (e) {
       log('Error getting contact info: $e');
+      return [];
     }
   }
 
@@ -419,9 +427,9 @@ class apis {
   //     "color_id": "",
   //     "family_id": ""
   //   }).then((value) {
-  //     print(value.id);
+  //     log(value.id);
   //     Navigator.pop(context);
-  //   }).catchError((error) => print("Failed to add new note due to $error"));
+  //   }).catchError((error) => log("Failed to add new note due to $error"));
   // }
 
   // static Future<void> sendingStatusNote(ChatUser user, String text, int color,
@@ -440,10 +448,32 @@ class apis {
   //     "color_id": color,
   //     "family_id": family,
   //   }).then((value) {
-  //     print(value.id);
+  //     log(value.id);
   //     Navigator.pop(context);
-  //   }).catchError((error) => print("Failed to add new note due to $error"));
+  //   }).catchError((error) => log("Failed to add new note due to $error"));
   // }
+  static Future<List<Map<String, dynamic>>> getStatus(ChatUser user) async {
+  List<Map<String, dynamic>> statusList = [];
+  try {
+    log('Fetching status for user: ${user.Id}');
+    
+    final QuerySnapshot<Map<String, dynamic>> statusSnapshot = await firestore
+        .collection('Status')
+        .doc(user.Id)
+        .collection('my_status')
+        .get();
+
+    log('Fetched ${statusSnapshot.docs.length} status documents');
+
+    statusList = statusSnapshot.docs.map((doc) => doc.data()).toList();
+
+    log('Status List from getStatus: $statusList'); // Tambahkan log ini untuk debugging
+  } catch (e) {
+    log('Error getting status: $e');
+  }
+  return statusList;
+}
+
 
   static Future<void> sendingStatusImage(
       ChatUser user, String path, BuildContext context) async {
@@ -488,10 +518,10 @@ class apis {
         });
       }
 
-      print("Story added successfully");
+      log("Story added successfully");
       Navigator.pop(context);
     } catch (error) {
-      print("Failed to add story due to $error");
+      log("Failed to add story due to $error");
     }
   }
 
@@ -538,10 +568,10 @@ class apis {
         });
       }
 
-      print("Story added successfully");
+      log("Story added successfully");
       Navigator.pop(context);
     } catch (error) {
-      print("Failed to add story due to $error");
+      log("Failed to add story due to $error");
     }
   }
 
@@ -585,13 +615,12 @@ class apis {
         await userDoc.update({
           'isArchived': true,
         });
-        print('Chat archived successfully for contact user ID: $contactUserId');
+        log('Chat archived successfully for contact user ID: $contactUserId');
       } else {
-        print(
-            'Error archiving chat: Document not found for contact user ID: $contactUserId');
+        log('Error archiving chat: Document not found for contact user ID: $contactUserId');
       }
     } catch (e) {
-      print('Error archiving chat: $e');
+      log('Error archiving chat: $e');
     }
   }
 
@@ -608,14 +637,12 @@ class apis {
         await userDoc.update({
           'isArchived': false,
         });
-        print(
-            'Chat unarchived successfully for contact user ID: $contactUserId');
+        log('Chat unarchived successfully for contact user ID: $contactUserId');
       } else {
-        print(
-            'Error unarchiving chat: Document not found for contact user ID: $contactUserId');
+        log('Error unarchiving chat: Document not found for contact user ID: $contactUserId');
       }
     } catch (e) {
-      print('Error unarchiving chat: $e');
+      log('Error unarchiving chat: $e');
     }
   }
 
@@ -627,9 +654,9 @@ class apis {
           .collection('my_users')
           .doc(blockedUserId)
           .update({'isBlocked': true});
-      print('User $blockedUserId has been blocked by $userId.');
+      log('User $blockedUserId has been blocked by $userId.');
     } catch (e) {
-      print('Error blocking user: $e');
+      log('Error blocking user: $e');
       // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
   }
@@ -643,9 +670,9 @@ class apis {
           .collection('my_users')
           .doc(blockedUserId)
           .update({'isBlocked': false});
-      print('User $blockedUserId has been unblocked by $userId.');
+      log('User $blockedUserId has been unblocked by $userId.');
     } catch (e) {
-      print('Error unblocking user: $e');
+      log('Error unblocking user: $e');
       // Tambahkan kode untuk menangani error, misalnya dengan menampilkan pesan kepada pengguna
     }
   }
